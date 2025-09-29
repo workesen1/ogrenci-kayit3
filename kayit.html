@@ -1,443 +1,325 @@
-!DOCTYPE html
-html lang=tr
-head
-    meta charset=UTF-8
-    meta name=viewport content=width=device-width, initial-scale=1.0
-    titleÖğrenci Kayıt Sistemititle
-    style
-         {
-            margin 0;
-            padding 0;
-            box-sizing border-box;
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Kayıt Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height 100vh;
-            display flex;
-            align-items center;
-            justify-content center;
-            padding 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .container {
-            background white;
-            padding 30px;
-            border-radius 15px;
-            box-shadow 0 15px 35px rgba(0, 0, 0, 0.1);
-            width 100%;
-            max-width 500px;
-            transition all 0.3s ease;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
         }
 
-        .containerhover {
-            transform translateY(-5px);
-            box-shadow 0 20px 40px rgba(0, 0, 0, 0.15);
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         h1 {
-            text-align center;
-            color #333;
-            margin-bottom 30px;
-            font-size 28px;
-            font-weight 600;
-        }
-
-        .menu-buttons {
-            display grid;
-            grid-template-columns 1fr 1fr;
-            gap 15px;
-            margin-bottom 20px;
-        }
-
-        .menu-btn {
-            padding 20px;
-            border 2px solid #667eea;
-            background white;
-            color #667eea;
-            border-radius 10px;
-            cursor pointer;
-            font-size 18px;
-            font-weight 600;
-            transition all 0.3s ease;
-            text-align center;
-        }
-
-        .menu-btnhover {
-            background #667eea;
-            color white;
-            transform translateY(-3px);
-            box-shadow 0 8px 20px rgba(102, 126, 234, 0.4);
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
         }
 
         .kayit-turu {
-            display flex;
-            gap 10px;
-            margin-bottom 30px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
         }
 
         .kayit-turu button {
-            flex 1;
-            padding 12px;
-            border 2px solid #667eea;
-            background white;
-            color #667eea;
-            border-radius 8px;
-            cursor pointer;
-            font-size 16px;
-            font-weight 500;
-            transition all 0.3s ease;
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
         .kayit-turu button.active {
-            background #667eea;
-            color white;
+            background: #667eea;
+            color: white;
         }
 
-        .kayit-turu buttonhover {
-            transform translateY(-2px);
-            box-shadow 0 5px 15px rgba(102, 126, 234, 0.3);
+        .kayit-turu button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .form-group {
-            margin-bottom 20px;
+            margin-bottom: 20px;
         }
 
         label {
-            display block;
-            margin-bottom 8px;
-            color #555;
-            font-weight 500;
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
         }
 
         input, select {
-            width 100%;
-            padding 12px;
-            border 2px solid #e1e1e1;
-            border-radius 8px;
-            font-size 16px;
-            transition all 0.3s ease;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
 
-        inputfocus, selectfocus {
-            outline none;
-            border-color #667eea;
-            box-shadow 0 0 0 3px rgba(102, 126, 234, 0.1);
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .ogrenci-listesi {
-            display none;
+            display: none;
         }
 
         .ogrenci-item {
-            display flex;
-            gap 10px;
-            margin-bottom 15px;
-            align-items center;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
         }
 
         .ogrenci-item input {
-            flex 1;
+            flex: 1;
         }
 
         .sil-btn {
-            background #ff4757;
-            color white;
-            border none;
-            padding 12px 15px;
-            border-radius 8px;
-            cursor pointer;
-            font-size 14px;
-            transition all 0.3s ease;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
-        .sil-btnhover {
-            background #ff3838;
-            transform scale(1.05);
+        .sil-btn:hover {
+            background: #ff3838;
+            transform: scale(1.05);
         }
 
         .ekle-btn {
-            background #2ed573;
-            color white;
-            border none;
-            padding 10px 20px;
-            border-radius 8px;
-            cursor pointer;
-            font-size 14px;
-            margin-bottom 20px;
-            transition all 0.3s ease;
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
-        .ekle-btnhover {
-            background #26de60;
-            transform translateY(-2px);
+        .ekle-btn:hover {
+            background: #26de60;
+            transform: translateY(-2px);
         }
 
         .kayit-btn, .geri-btn {
-            width 100%;
-            padding 15px;
-            background linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color white;
-            border none;
-            border-radius 10px;
-            font-size 18px;
-            font-weight 600;
-            cursor pointer;
-            transition all 0.3s ease;
-            margin-top 20px;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
 
-        .geri-btn {
-            background #95a5a6;
-            margin-top 10px;
+        .kayit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .geri-btnhover {
-            background #7f8c8d;
-        }
-
-        .kayit-btnhover {
-            transform translateY(-3px);
-            box-shadow 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .kayit-btndisabled {
-            background #95a5a6;
-            cursor not-allowed;
-            transform none;
-            box-shadow none;
+        .kayit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .qr-container {
-            text-align center;
-            padding 30px;
-            display none;
+            text-align: center;
+            padding: 30px;
+            display: none;
         }
 
         .qr-code {
-            background white;
-            padding 20px;
-            border-radius 10px;
-            display inline-block;
-            box-shadow 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin 20px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
         }
 
         .success-message {
-            color #2ed573;
-            font-size 24px;
-            font-weight 600;
-            margin-bottom 20px;
-        }
-
-        .error-message {
-            color #ff4757;
-            font-size 24px;
-            font-weight 600;
-            margin-bottom 20px;
+            color: #2ed573;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .qr-info {
-            background #f8f9fa;
-            padding 15px;
-            border-radius 8px;
-            margin-top 20px;
-            border-left 4px solid #667eea;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
         }
 
         .yeni-kayit-btn {
-            background #667eea;
-            color white;
-            border none;
-            padding 12px 25px;
-            border-radius 8px;
-            cursor pointer;
-            font-size 16px;
-            margin-top 20px;
-            transition all 0.3s ease;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
         }
 
-        .yeni-kayit-btnhover {
-            background #5a6fd8;
-            transform translateY(-2px);
+        .yeni-kayit-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
         }
 
         .hidden {
-            display none;
+            display: none;
         }
-
-        #qr-video {
-            width 100%;
-            max-width 400px;
-            border-radius 10px;
-            margin 20px 0;
-        }
-
-        .qr-okuyucu-container {
-            display none;
-        }
-
-        #dogrulama-sonuc {
-            margin-top 20px;
-            padding 15px;
-            border-radius 8px;
-            font-size 18px;
-            font-weight 600;
-        }
-
-        .basarili {
-            background #d4edda;
-            color #155724;
-            border 2px solid #c3e6cb;
-        }
-
-        .basarisiz {
-            background #f8d7da;
-            color #721c24;
-            border 2px solid #f5c6cb;
-        }
-    style
-head
-body
-    div class=container
-        !-- Ana Menü --
-        div id=anaMenu
-            h1🎓 Öğrenci Kayıt Sistemih1
-            div class=menu-buttons
-                button class=menu-btn onclick=menuSec('kayit')📝 Kayıt Olbutton
-                button class=menu-btn onclick=menuSec('dogrula')📱 QR Doğrulabutton
-            div
-        div
-
-        !-- Kayıt Formu --
-        div id=kayitForm class=hidden
-            h1📝 Kayıt Formuh1
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="kayitForm">
+            <h1>🎓 Öğrenci Kayıt Sistemi</h1>
             
-            div class=kayit-turu
-                button id=bireyselBtn class=active onclick=kayitTuruSec('bireysel')Bireysel Kayıtbutton
-                button id=sinifBtn onclick=kayitTuruSec('sinif')Sınıf Kaydıbutton
-            div
+            <div class="kayit-turu">
+                <button id="bireyselBtn" class="active" onclick="kayitTuruSec('bireysel')">Bireysel Kayıt</button>
+                <button id="sinifBtn" onclick="kayitTuruSec('sinif')">Sınıf Kaydı</button>
+            </div>
 
-            !-- Bireysel Kayıt Formu --
-            div id=bireyselForm
-                div class=form-group
-                    label for=isimİsimlabel
-                    input type=text id=isim placeholder=Adınızı giriniz
-                div
+            <div id="bireyselForm">
+                <div class="form-group">
+                    <label for="isim">İsim:</label>
+                    <input type="text" id="isim" placeholder="Adınızı giriniz">
+                </div>
                 
-                div class=form-group
-                    label for=soyisimSoyisimlabel
-                    input type=text id=soyisim placeholder=Soyadınızı giriniz
-                div
+                <div class="form-group">
+                    <label for="soyisim">Soyisim:</label>
+                    <input type="text" id="soyisim" placeholder="Soyadınızı giriniz">
+                </div>
                 
-                div class=form-group
-                    label for=sinifSınıflabel
-                    select id=sinif
-                        option value=Sınıf Seçinizoption
-                        option value=Okul ÖncesiOkul Öncesioption
-                        option value=1. Sınıf1. Sınıfoption
-                        option value=2. Sınıf2. Sınıfoption
-                        option value=3. Sınıf3. Sınıfoption
-                        option value=4. Sınıf4. Sınıfoption
-                        option value=5. Sınıf5. Sınıfoption
-                        option value=6. Sınıf6. Sınıfoption
-                        option value=7. Sınıf7. Sınıfoption
-                        option value=8. Sınıf8. Sınıfoption
-                        option value=9. Sınıf9. Sınıfoption
-                        option value=10. Sınıf10. Sınıfoption
-                        option value=11. Sınıf11. Sınıfoption
-                        option value=12. Sınıf12. Sınıfoption
-                    select
-                div
-            div
+                <div class="form-group">
+                    <label for="sinif">Sınıf:</label>
+                    <select id="sinif">
+                        <option value="">Sınıf Seçiniz</option>
+                        <option value="Okul Öncesi">Okul Öncesi</option>
+                        <option value="1. Sınıf">1. Sınıf</option>
+                        <option value="2. Sınıf">2. Sınıf</option>
+                        <option value="3. Sınıf">3. Sınıf</option>
+                        <option value="4. Sınıf">4. Sınıf</option>
+                        <option value="5. Sınıf">5. Sınıf</option>
+                        <option value="6. Sınıf">6. Sınıf</option>
+                        <option value="7. Sınıf">7. Sınıf</option>
+                        <option value="8. Sınıf">8. Sınıf</option>
+                        <option value="9. Sınıf">9. Sınıf</option>
+                        <option value="10. Sınıf">10. Sınıf</option>
+                        <option value="11. Sınıf">11. Sınıf</option>
+                        <option value="12. Sınıf">12. Sınıf</option>
+                    </select>
+                </div>
+            </div>
 
-            !-- Sınıf Kaydı Formu --
-            div id=sinifForm class=hidden
-                div class=form-group
-                    label for=ogretmenIsimKayıt Eden Öğretmenlabel
-                    input type=text id=ogretmenIsim placeholder=Öğretmen adını giriniz
-                div
+            <div id="sinifForm" class="hidden">
+                <div class="form-group">
+                    <label for="ogretmenIsim">Kayıt Eden Öğretmen:</label>
+                    <input type="text" id="ogretmenIsim" placeholder="Öğretmen adını giriniz">
+                </div>
                 
-                div class=form-group
-                    label for=sinifSecSınıf Seçlabel
-                    select id=sinifSec
-                        option value=Sınıf Seçinizoption
-                        option value=Okul ÖncesiOkul Öncesioption
-                        option value=1. Sınıf1. Sınıfoption
-                        option value=2. Sınıf2. Sınıfoption
-                        option value=3. Sınıf3. Sınıfoption
-                        option value=4. Sınıf4. Sınıfoption
-                        option value=5. Sınıf5. Sınıfoption
-                        option value=6. Sınıf6. Sınıfoption
-                        option value=7. Sınıf7. Sınıfoption
-                        option value=8. Sınıf8. Sınıfoption
-                        option value=9. Sınıf9. Sınıfoption
-                        option value=10. Sınıf10. Sınıfoption
-                        option value=11. Sınıf11. Sınıfoption
-                        option value=12. Sınıf12. Sınıfoption
-                    select
-                div
+                <div class="form-group">
+                    <label for="sinifSec">Sınıf Seç:</label>
+                    <select id="sinifSec">
+                        <option value="">Sınıf Seçiniz</option>
+                        <option value="Okul Öncesi">Okul Öncesi</option>
+                        <option value="1. Sınıf">1. Sınıf</option>
+                        <option value="2. Sınıf">2. Sınıf</option>
+                        <option value="3. Sınıf">3. Sınıf</option>
+                        <option value="4. Sınıf">4. Sınıf</option>
+                        <option value="5. Sınıf">5. Sınıf</option>
+                        <option value="6. Sınıf">6. Sınıf</option>
+                        <option value="7. Sınıf">7. Sınıf</option>
+                        <option value="8. Sınıf">8. Sınıf</option>
+                        <option value="9. Sınıf">9. Sınıf</option>
+                        <option value="10. Sınıf">10. Sınıf</option>
+                        <option value="11. Sınıf">11. Sınıf</option>
+                        <option value="12. Sınıf">12. Sınıf</option>
+                    </select>
+                </div>
 
-                div class=ogrenci-listesi
-                    div id=ogrenciListesi
-                        div class=ogrenci-item
-                            label1. Öğrencilabel
-                            input type=text class=ogrenci-input placeholder=Öğrenci ismini giriniz
-                        div
-                    div
-                    button type=button class=ekle-btn onclick=ogrenciEkle()+ Öğrenci Eklebutton
-                div
-            div
+                <div class="ogrenci-listesi">
+                    <div id="ogrenciListesi">
+                        <div class="ogrenci-item">
+                            <label>1. Öğrenci:</label>
+                            <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
+                        </div>
+                    </div>
+                    <button type="button" class="ekle-btn" onclick="ogrenciEkle()">+ Öğrenci Ekle</button>
+                </div>
+            </div>
 
-            button type=button class=kayit-btn id=kayitBtn onclick=kayitOl()Kayıt Olbutton
-            button type=button class=geri-btn onclick=anaMenuyeDon()← Ana Menübutton
-        div
+            <button type="button" class="kayit-btn" id="kayitBtn" onclick="kayitOl()">Kayıt Ol</button>
+        </div>
 
-        !-- QR Kod Görüntüleme --
-        div id=qrContainer class=qr-container
-            div class=success-message✅ Kayıt Başarılı!div
-            div class=qr-code id=qrCodediv
-            div class=qr-info id=qrInfodiv
-            button class=yeni-kayit-btn onclick=yeniKayit()Yeni Kayıtbutton
-        div
+        <div id="qrContainer" class="qr-container">
+            <div class="success-message">✅ Kayıt Başarılı!</div>
+            <div class="qr-code" id="qrCode"></div>
+            <div class="qr-info" id="qrInfo"></div>
+            <button class="yeni-kayit-btn" onclick="yeniKayit()">Yeni Kayıt</button>
+        </div>
+    </div>
 
-        !-- QR Kod Okuyucu --
-        div id=qrOkuyucu class=qr-okuyucu-container
-            h1📱 QR Kod Doğrulamah1
-            video id=qr-video playsinlinevideo
-            div id=dogrulama-sonucdiv
-            button type=button class=geri-btn onclick=anaMenuyeDon()← Ana Menübutton
-        div
-    div
-
-    script src=httpscdnjs.cloudflare.comajaxlibsqrious4.0.2qrious.min.jsscript
-    script src=httpscdn.jsdelivr.netnpmjsqr@1.4.0distjsQR.min.jsscript
-    script
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script>
         let kayitTuru = 'bireysel';
         let ogrenciSayisi = 1;
-        let qrTaramaDurum = false;
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5WGpPn5B0USgPo_81duD-bDA4puiJ82WyZRozJ_8LUcsdpHWCwIrvb--kjWlf92is/exec';
-
-        function menuSec(menu) {
-            document.getElementById('anaMenu').classList.add('hidden');
-            if (menu === 'kayit') {
-                document.getElementById('kayitForm').classList.remove('hidden');
-            } else if (menu === 'dogrula') {
-                document.getElementById('qrOkuyucu').classList.remove('hidden');
-                qrTaramayiBaslat();
-            }
-        }
-
-        function anaMenuyeDon() {
-            document.getElementById('kayitForm').classList.add('hidden');
-            document.getElementById('qrOkuyucu').classList.add('hidden');
-            document.getElementById('qrContainer').style.display = 'none';
-            document.getElementById('anaMenu').classList.remove('hidden');
-            document.getElementById('dogrulama-sonuc').innerHTML = '';
-            qrTaramayiDurdur();
-            yeniKayit();
-        }
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywHNe7DDE3VDxi4mf7-LJIeb3R5K4cl4PHm6rvarlM_ZOO34LSjEAJe037VGQWXOeNnA/exec';
 
         function kayitTuruSec(tur) {
             kayitTuru = tur;
@@ -456,9 +338,9 @@ body
             const yeniOgrenci = document.createElement('div');
             yeniOgrenci.className = 'ogrenci-item';
             yeniOgrenci.innerHTML = `
-                label${ogrenciSayisi}. Öğrencilabel
-                input type=text class=ogrenci-input placeholder=Öğrenci ismini giriniz
-                button type=button class=sil-btn onclick=ogrenciSil(this)Silbutton
+                <label>${ogrenciSayisi}. Öğrenci:</label>
+                <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
+                <button type="button" class="sil-btn" onclick="ogrenciSil(this)">Sil</button>
             `;
             ogrenciListesi.appendChild(yeniOgrenci);
         }
@@ -470,9 +352,9 @@ body
 
         function ogrenciNumaralariniGuncelle() {
             const ogrenciItems = document.querySelectorAll('.ogrenci-item');
-            ogrenciItems.forEach((item, index) = {
+            ogrenciItems.forEach((item, index) => {
                 const label = item.querySelector('label');
-                label.textContent = `${index + 1}. Öğrenci`;
+                label.textContent = `${index + 1}. Öğrenci:`;
             });
             ogrenciSayisi = ogrenciItems.length;
         }
@@ -483,7 +365,7 @@ body
             btn.textContent = 'İşleniyor...';
             btn.style.background = '#95a5a6';
             
-            setTimeout(() = {
+            setTimeout(() => {
                 let qrData = '';
                 let bilgi = '';
                 
@@ -492,7 +374,7 @@ body
                     const soyisim = document.getElementById('soyisim').value;
                     const sinif = document.getElementById('sinif').value;
                     
-                    if (!isim  !soyisim  !sinif) {
+                    if (!isim || !soyisim || !sinif) {
                         alert('Lütfen tüm alanları doldurunuz!');
                         btn.disabled = false;
                         btn.textContent = 'Kayıt Ol';
@@ -500,15 +382,15 @@ body
                         return;
                     }
                     
-                    qrData = `İsim ${isim} ${soyisim}nSınıf ${sinif}`;
-                    bilgi = `strongÖğrencistrong ${isim} ${soyisim}brstrongSınıfstrong ${sinif}`;
+                    qrData = `İsim: ${isim} ${soyisim}\nSınıf: ${sinif}`;
+                    bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}`;
                     
                 } else {
                     const ogretmen = document.getElementById('ogretmenIsim').value;
                     const sinif = document.getElementById('sinifSec').value;
                     const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
                     
-                    if (!ogretmen  !sinif) {
+                    if (!ogretmen || !sinif) {
                         alert('Lütfen öğretmen adı ve sınıf seçiniz!');
                         btn.disabled = false;
                         btn.textContent = 'Kayıt Ol';
@@ -517,7 +399,7 @@ body
                     }
                     
                     const ogrenciler = [];
-                    ogrenciInputlar.forEach(input = {
+                    ogrenciInputlar.forEach(input => {
                         if (input.value.trim()) {
                             ogrenciler.push(input.value.trim());
                         }
@@ -531,39 +413,39 @@ body
                         return;
                     }
                     
-                    qrData = `Öğretmen ${ogretmen}nSınıf ${sinif}nÖğrenciler ${ogrenciler.join(', ')}`;
-                    bilgi = `strongÖğretmenstrong ${ogretmen}brstrongSınıfstrong ${sinif}brstrongÖğrenci Sayısıstrong ${ogrenciler.length}brstrongÖğrencilerstrong ${ogrenciler.join(', ')}`;
+                    qrData = `Öğretmen: ${ogretmen}\nSınıf: ${sinif}\nÖğrenciler: ${ogrenciler.join(', ')}`;
+                    bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}`;
                 }
                 
-                const kayitVerisi = kayitTuru === 'bireysel'  {
-                    tur 'bireysel',
-                    isim document.getElementById('isim').value,
-                    soyisim document.getElementById('soyisim').value,
-                    sinif document.getElementById('sinif').value,
-                    tarih new Date().toLocaleDateString('tr-TR')
-                }  {
-                    tur 'sinif',
-                    ogretmen document.getElementById('ogretmenIsim').value,
-                    sinif document.getElementById('sinifSec').value,
-                    ogrenciler Array.from(document.querySelectorAll('.ogrenci-input')).filter(input = input.value.trim()).map(input = input.value.trim()),
-                    tarih new Date().toLocaleDateString('tr-TR')
+                const kayitVerisi = kayitTuru === 'bireysel' ? {
+                    tur: 'bireysel',
+                    isim: document.getElementById('isim').value,
+                    soyisim: document.getElementById('soyisim').value,
+                    sinif: document.getElementById('sinif').value,
+                    tarih: new Date().toLocaleDateString('tr-TR')
+                } : {
+                    tur: 'sinif',
+                    ogretmen: document.getElementById('ogretmenIsim').value,
+                    sinif: document.getElementById('sinifSec').value,
+                    ogrenciler: Array.from(document.querySelectorAll('.ogrenci-input')).filter(input => input.value.trim()).map(input => input.value.trim()),
+                    tarih: new Date().toLocaleDateString('tr-TR')
                 };
                 
                 veritabaninaKaydet(kayitVerisi);
                 
                 const qr = new QRious({
-                    element document.createElement('canvas'),
-                    value qrData,
-                    size 200,
-                    backgroundAlpha 0,
-                    foreground '#333',
-                    level 'M'
+                    element: document.createElement('canvas'),
+                    value: qrData,
+                    size: 200,
+                    backgroundAlpha: 0,
+                    foreground: '#333',
+                    level: 'M'
                 });
                 
                 document.getElementById('qrCode').innerHTML = '';
                 document.getElementById('qrCode').appendChild(qr.canvas);
                 document.getElementById('qrInfo').innerHTML = bilgi;
-                document.getElementById('kayitForm').classList.add('hidden');
+                document.getElementById('kayitForm').style.display = 'none';
                 document.getElementById('qrContainer').style.display = 'block';
                 
                 btn.disabled = false;
@@ -573,171 +455,37 @@ body
         }
 
         function yeniKayit() {
-            document.querySelectorAll('input').forEach(input = input.value = '');
-            document.querySelectorAll('select').forEach(select = select.selectedIndex = 0);
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
             const ogrenciListesi = document.getElementById('ogrenciListesi');
             ogrenciListesi.innerHTML = `
-                div class=ogrenci-item
-                    label1. Öğrencilabel
-                    input type=text class=ogrenci-input placeholder=Öğrenci ismini giriniz
-                div
+                <div class="ogrenci-item">
+                    <label>1. Öğrenci:</label>
+                    <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
+                </div>
             `;
             ogrenciSayisi = 1;
             kayitTuruSec('bireysel');
             document.getElementById('qrContainer').style.display = 'none';
-            document.getElementById('kayitForm').classList.remove('hidden');
+            document.getElementById('kayitForm').style.display = 'block';
         }
 
         function veritabaninaKaydet(veri) {
             fetch(GOOGLE_SCRIPT_URL, {
-                method 'POST',
-                mode 'no-cors',
-                headers {
-                    'Content-Type' 'applicationjson',
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                body JSON.stringify(veri)
+                body: JSON.stringify(veri)
             })
-            .then(() = {
+            .then(() => {
                 console.log('Veri başarıyla gönderildi');
             })
-            .catch(error = {
-                console.error('Bağlantı hatası', error);
+            .catch(error => {
+                console.error('Bağlantı hatası:', error);
             });
         }
-
-         QR Kod Okuyucu Fonksiyonları
-        let video;
-        let canvas;
-        let canvasContext;
-
-        function qrTaramayiBaslat() {
-            video = document.getElementById('qr-video');
-            canvas = document.createElement('canvas');
-            canvasContext = canvas.getContext('2d');
-            qrTaramaDurum = true;
-
-             Önce kamera izni kontrolü
-            if (!navigator.mediaDevices  !navigator.mediaDevices.getUserMedia) {
-                alert('Tarayıcınız kamera desteği sunmuyor. Lütfen güncel bir tarayıcı kullanın.');
-                return;
-            }
-
-             Mobil için arka kamera, masaüstü için herhangi bir kamera
-            const constraints = {
-                video {
-                    facingMode { ideal 'environment' },
-                    width { ideal 1280 },
-                    height { ideal 720 }
-                }
-            };
-
-            navigator.mediaDevices.getUserMedia(constraints)
-            .then(function(stream) {
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true);
-                video.play();
-                requestAnimationFrame(qrKodTara);
-                
-                const sonucDiv = document.getElementById('dogrulama-sonuc');
-                sonucDiv.innerHTML = '📸 Kamera hazır - QR kodu gösterin';
-                sonucDiv.style.background = '#d1ecf1';
-                sonucDiv.style.color = '#0c5460';
-                sonucDiv.style.border = '2px solid #bee5eb';
-            })
-            .catch(function(err) {
-                console.error('Kamera erişimi hatası', err);
-                let hataMesaji = '';
-                
-                if (err.name === 'NotAllowedError'  err.name === 'PermissionDeniedError') {
-                    hataMesaji = '📷 Kamera izni verilmedi!nnÇözümn1. Tarayıcı ayarlarından kamera iznini açınn2. Sayfayı yenileyinn3. Tekrar deneyin';
-                } else if (err.name === 'NotFoundError') {
-                    hataMesaji = '📷 Kamera bulunamadı!nnLütfen cihazınızın kamerasının çalıştığından emin olun.';
-                } else if (err.name === 'NotReadableError') {
-                    hataMesaji = '📷 Kamera kullanımda!nnBaşka bir uygulama kamerayı kullanıyor olabilir.';
-                } else {
-                    hataMesaji = '📷 Kamera hatası ' + err.message;
-                }
-                
-                alert(hataMesaji);
-                anaMenuyeDon();
-            });
-        }
-
-        function qrTaramayiDurdur() {
-            qrTaramaDurum = false;
-            if (video && video.srcObject) {
-                video.srcObject.getTracks().forEach(track = track.stop());
-            }
-        }
-
-        function qrKodTara() {
-            if (!qrTaramaDurum) return;
-
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                canvas.height = video.videoHeight;
-                canvas.width = video.videoWidth;
-                canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts dontInvert,
-                });
-
-                if (code) {
-                    qrTaramaDurum = false;
-                    qrKoduDogrula(code.data);
-                    return;
-                }
-            }
-            
-            requestAnimationFrame(qrKodTara);
-        }
-
-        function qrKoduDogrula(qrData) {
-            const sonucDiv = document.getElementById('dogrulama-sonuc');
-            sonucDiv.innerHTML = '⏳ Doğrulanıyor...';
-            sonucDiv.className = '';
-
-            fetch(GOOGLE_SCRIPT_URL, {
-                method 'POST',
-                headers {
-                    'Content-Type' 'applicationjson',
-                },
-                body JSON.stringify({
-                    action 'dogrula',
-                    qrData qrData
-                })
-            })
-            .then(response = response.json())
-            .then(data = {
-                if (data.verified) {
-                    sonucDiv.innerHTML = '✅ ' + data.message;
-                    sonucDiv.className = 'basarili';
-                } else {
-                    sonucDiv.innerHTML = '❌ ' + data.message;
-                    sonucDiv.className = 'basarisiz';
-                }
-                
-                setTimeout(() = {
-                    sonucDiv.innerHTML = '';
-                    sonucDiv.className = '';
-                    qrTaramaDurum = true;
-                    requestAnimationFrame(qrKodTara);
-                }, 3000);
-            })
-            .catch(error = {
-                console.error('Doğrulama hatası', error);
-                sonucDiv.innerHTML = '❌ Bağlantı hatası!';
-                sonucDiv.className = 'basarisiz';
-                
-                setTimeout(() = {
-                    sonucDiv.innerHTML = '';
-                    sonucDiv.className = '';
-                    qrTaramaDurum = true;
-                    requestAnimationFrame(qrKodTara);
-                }, 3000);
-            });
-        }
-    script
-body
-html
+    </script>
+</body>
+</html>
