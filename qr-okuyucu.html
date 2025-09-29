@@ -75,15 +75,28 @@
             height: 250px;
             border: 3px solid #2ed573;
             border-radius: 10px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);
             pointer-events: none;
+        }
+
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #2ed573;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0%, 100% { top: 0; }
+            50% { top: 100%; }
         }
 
         .scanner-corner {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #2ed573;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #2ed573;
         }
 
         .corner-top-left {
@@ -227,6 +240,16 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        #debug-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 5px;
+            font-size: 12px;
+            text-align: left;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -241,14 +264,16 @@
             
             <div class="info">
                 <strong>📸 Nasıl Kullanılır?</strong><br>
-                • QR kodu kamera karşısına tutun<br>
+                • QR kodu 15-20 cm uzaklıktan tutun<br>
                 • Yeşil çerçeve içinde ortalayın<br>
+                • Işık iyi olsun, çok yakın tutmayın<br>
                 • Otomatik olarak okuyacaktır
             </div>
 
             <div id="scanner-region">
                 <video id="qr-video" playsinline autoplay></video>
                 <div class="scanner-box">
+                    <div class="scanner-line"></div>
                     <div class="scanner-corner corner-top-left"></div>
                     <div class="scanner-corner corner-top-right"></div>
                     <div class="scanner-corner corner-bottom-left"></div>
@@ -257,6 +282,8 @@
             </div>
 
             <div id="dogrulama-sonuc"></div>
+            
+            <div id="debug-info"></div>
 
             <div class="stats">
                 <div class="stat-item">
@@ -274,13 +301,13 @@
             </div>
 
             <button class="btn btn-secondary" onclick="yenidenBaslat()">🔄 Yeniden Tara</button>
+            <button class="btn btn-secondary" onclick="toggleDebug()" style="margin-top: 5px; font-size: 14px;">🔧 Debug Bilgisi</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
-        // BURAYA GOOGLE APPS SCRIPT URL'NİZİ YAZIN
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5WGpPn5B0USgPo_81duD-bDA4puiJ82WyZRozJ_8LUcsdpHWCwIrvb--kjWlf92is/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywHNe7DDE3VDxi4mf7-LJIeb3R5K4cl4PHm6rvarlM_ZOO34LSjEAJe037VGQWXOeNnA/exec';
 
         let video;
         let canvas;
@@ -291,6 +318,7 @@
         let toplamSayac = 0;
         let sonOkunanQR = '';
         let sonOkumaZamani = 0;
+        let taramaSayaci = 0;
 
         window.addEventListener('load', () => {
             kamerayiBaslat();
@@ -308,9 +336,9 @@
 
             const constraints = {
                 video: {
-                    facingMode: { exact: 'environment' }, // Arka kamera
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 }
+                    facingMode: 'environment',
+                    width: { min: 640, ideal: 1280, max: 1920 },
+                    height: { min: 480, ideal: 720, max: 1080 }
                 },
                 audio: false
             };
@@ -319,15 +347,21 @@
             .then(function(stream) {
                 video.srcObject = stream;
                 video.setAttribute('playsinline', true);
-                video.play();
                 
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                
-                taramaDurum = true;
-                requestAnimationFrame(qrKodTara);
-                
-                gosterMesaj('📸 Kamera hazır - QR kodu gösterin', 'bekliyor');
+                video.onloadedmetadata = function() {
+                    video.play();
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                    
+                    taramaDurum = true;
+                    requestAnimationFrame(qrKodTara);
+                    
+                    gosterMesaj('📸 Kamera hazır - QR kodu gösterin', 'bekliyor');
+                    
+                    const track = stream.getVideoTracks()[0];
+                    const settings = track.getSettings();
+                    debugYaz(`Kamera: ${settings.width}x${settings.height}`);
+                };
             })
             .catch(function(err) {
                 console.error('Kamera hatası:', err);
@@ -340,7 +374,6 @@
                 if (err.name === 'NotAllowedError') {
                     alert('❌ Kamera izni verilmedi!\n\nLütfen:\n1. Tarayıcı ayarlarından kamera iznini açın\n2. Sayfayı yenileyin');
                 } else if (err.name === 'NotFoundError') {
-                    // Ön kamera dene
                     navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'user' },
                         audio: false
@@ -369,19 +402,25 @@
                 
                 const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
+                    inversionAttempts: "attemptBoth",
                 });
+
+                taramaSayaci++;
+                if (taramaSayaci % 30 === 0) {
+                    debugYaz(`Tarama aktif: ${taramaSayaci} frame işlendi`);
+                }
 
                 if (code) {
                     const simdikiZaman = Date.now();
                     
-                    // Aynı QR kodun 3 saniye içinde tekrar okunmasını engelle
+                    debugYaz(`QR kod bulundu: ${code.data.substring(0, 30)}...`);
+                    
                     if (code.data !== sonOkunanQR || (simdikiZaman - sonOkumaZamani) > 3000) {
                         sonOkunanQR = code.data;
                         sonOkumaZamani = simdikiZaman;
                         
                         taramaDurum = false;
-                        navigator.vibrate && navigator.vibrate(200); // Titreşim
+                        navigator.vibrate && navigator.vibrate(200);
                         qrKoduDogrula(code.data);
                     }
                 }
@@ -394,6 +433,7 @@
 
         function qrKoduDogrula(qrData) {
             gosterMesaj('⏳ Doğrulanıyor...', 'bekliyor');
+            debugYaz('Google Sheets\'e gönderiliyor...');
 
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
@@ -405,18 +445,22 @@
                     qrData: qrData
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                debugYaz(`Yanıt alındı: ${response.status}`);
+                return response.json();
+            })
             .then(data => {
+                debugYaz(`Sonuç: ${JSON.stringify(data)}`);
                 toplamSayac++;
                 
                 if (data.verified) {
                     basariliSayac++;
                     gosterMesaj('✅ ' + data.message, 'basarili');
-                    navigator.vibrate && navigator.vibrate([200, 100, 200]); // Başarı titreşimi
+                    navigator.vibrate && navigator.vibrate([200, 100, 200]);
                 } else {
                     basarisizSayac++;
                     gosterMesaj('❌ ' + data.message, 'basarisiz');
-                    navigator.vibrate && navigator.vibrate([500]); // Hata titreşimi
+                    navigator.vibrate && navigator.vibrate([500]);
                 }
                 
                 istatistikleriGuncelle();
@@ -429,6 +473,7 @@
             })
             .catch(error => {
                 console.error('Doğrulama hatası:', error);
+                debugYaz(`HATA: ${error.message}`);
                 gosterMesaj('❌ Bağlantı hatası! İnternet bağlantınızı kontrol edin.', 'basarisiz');
                 
                 setTimeout(() => {
@@ -453,12 +498,31 @@
 
         function yenidenBaslat() {
             sonOkunanQR = '';
+            taramaSayaci = 0;
             gosterMesaj('📸 Kamera hazır - QR kodu gösterin', 'bekliyor');
             taramaDurum = true;
             requestAnimationFrame(qrKodTara);
         }
 
-        // Sayfa kapatılınca kamerayı durdur
+        function debugYaz(mesaj) {
+            const debugDiv = document.getElementById('debug-info');
+            const zaman = new Date().toLocaleTimeString('tr-TR');
+            debugDiv.innerHTML = `<strong>[${zaman}]</strong> ${mesaj}<br>` + debugDiv.innerHTML;
+            if (debugDiv.innerHTML.split('<br>').length > 10) {
+                const lines = debugDiv.innerHTML.split('<br>');
+                debugDiv.innerHTML = lines.slice(0, 10).join('<br>');
+            }
+        }
+
+        function toggleDebug() {
+            const debugDiv = document.getElementById('debug-info');
+            if (debugDiv.style.display === 'none' || debugDiv.style.display === '') {
+                debugDiv.style.display = 'block';
+            } else {
+                debugDiv.style.display = 'none';
+            }
+        }
+
         window.addEventListener('beforeunload', () => {
             if (video && video.srcObject) {
                 video.srcObject.getTracks().forEach(track => track.stop());
