@@ -68,11 +68,6 @@
             color: white;
         }
 
-        .kayit-turu button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -99,10 +94,6 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .ogrenci-listesi {
-            display: none;
-        }
-
         .ogrenci-item {
             display: flex;
             gap: 10px;
@@ -125,11 +116,6 @@
             transition: all 0.3s ease;
         }
 
-        .sil-btn:hover {
-            background: #ff3838;
-            transform: scale(1.05);
-        }
-
         .ekle-btn {
             background: #2ed573;
             color: white;
@@ -139,12 +125,6 @@
             cursor: pointer;
             font-size: 14px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .ekle-btn:hover {
-            background: #26de60;
-            transform: translateY(-2px);
         }
 
         .kayit-btn {
@@ -161,16 +141,9 @@
             margin-top: 20px;
         }
 
-        .kayit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
         .kayit-btn:disabled {
             background: #95a5a6;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         .qr-container {
@@ -186,11 +159,6 @@
             display: inline-block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             margin: 20px 0;
-        }
-
-        .qr-code canvas {
-            display: block;
-            margin: 0 auto;
         }
 
         .success-message {
@@ -218,26 +186,10 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .yeni-kayit-btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
         }
 
         .hidden {
             display: none;
-        }
-
-        .test-info {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 14px;
-            text-align: left;
         }
     </style>
 </head>
@@ -251,7 +203,6 @@
                 <button id="sinifBtn" onclick="kayitTuruSec('sinif')">Sınıf Kaydı</button>
             </div>
 
-            <!-- Bireysel Kayıt Formu -->
             <div id="bireyselForm">
                 <div class="form-group">
                     <label for="isim">İsim:</label>
@@ -284,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- Sınıf Kaydı Formu -->
             <div id="sinifForm" class="hidden">
                 <div class="form-group">
                     <label for="ogretmenIsim">Kayıt Eden Öğretmen:</label>
@@ -311,36 +261,30 @@
                     </select>
                 </div>
 
-                <div class="ogrenci-listesi">
-                    <div id="ogrenciListesi">
-                        <div class="ogrenci-item">
-                            <label>1. Öğrenci:</label>
-                            <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
-                        </div>
+                <div id="ogrenciListesi">
+                    <div class="ogrenci-item">
+                        <label>1. Öğrenci:</label>
+                        <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
                     </div>
-                    <button type="button" class="ekle-btn" onclick="ogrenciEkle()">+ Öğrenci Ekle</button>
                 </div>
+                <button type="button" class="ekle-btn" onclick="ogrenciEkle()">+ Öğrenci Ekle</button>
             </div>
 
             <button type="button" class="kayit-btn" id="kayitBtn" onclick="kayitOl()">Kayıt Ol</button>
         </div>
 
-        <!-- QR Kod Görüntüleme Alanı -->
         <div id="qrContainer" class="qr-container">
             <div class="success-message">✅ Kayıt Başarılı!</div>
             <div class="qr-code" id="qrCode"></div>
             <div class="qr-info" id="qrInfo"></div>
-            <div class="test-info">
-                <strong>🧪 Test İçin:</strong><br>
-                Bu QR kodu herhangi bir QR okuyucu uygulaması ile test edebilirsiniz. 
-                Düzgün okunuyorsa ✅ işareti görünür.
-            </div>
             <button class="yeni-kayit-btn" onclick="yeniKayit()">Yeni Kayıt</button>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
+        
         let kayitTuru = 'bireysel';
         let ogrenciSayisi = 1;
 
@@ -352,10 +296,6 @@
             
             document.getElementById('bireyselForm').classList.toggle('hidden', tur !== 'bireysel');
             document.getElementById('sinifForm').classList.toggle('hidden', tur !== 'sinif');
-            
-            if (tur === 'sinif') {
-                document.querySelector('.ogrenci-listesi').style.display = 'block';
-            }
         }
 
         function ogrenciEkle() {
@@ -385,124 +325,112 @@
             ogrenciSayisi = ogrenciItems.length;
         }
 
-       function kayitOl() {
-    const btn = document.getElementById('kayitBtn');
-    btn.disabled = true;
-    btn.textContent = 'İşleniyor...';
+        function kayitOl() {
+            const btn = document.getElementById('kayitBtn');
+            btn.disabled = true;
+            btn.textContent = 'İşleniyor...';
 
-    setTimeout(() => {
-        let bilgi = '';
-        const now = new Date();
-        const kayitID = 'KYT' + now.getTime();
+            let bilgi = '';
+            const now = new Date();
+            const kayitID = 'KYT' + now.getTime();
+            let veri;
 
-        let veri;
+            if (kayitTuru === 'bireysel') {
+                const isim = document.getElementById('isim').value.trim();
+                const soyisim = document.getElementById('soyisim').value.trim();
+                const sinif = document.getElementById('sinif').value;
 
-        if (kayitTuru === 'bireysel') {
-            const isim = document.getElementById('isim').value;
-            const soyisim = document.getElementById('soyisim').value;
-            const sinif = document.getElementById('sinif').value;
-
-            if (!isim || !soyisim || !sinif) {
-                alert('Lütfen tüm alanları doldurunuz!');
-                btn.disabled = false;
-                btn.textContent = 'Kayıt Ol';
-                return;
-            }
-
-            bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}`;
-            veri = {
-                tur: 'bireysel',
-                isim,
-                soyisim,
-                sinif,
-                tarih: now.toLocaleDateString('tr-TR'),
-                qrData: kayitID,  // 🔁 Artık QR kodda uzun veri değil, sadece ID var
-                kayitID           // 🔁 Kaydı sistemde de gönderiyoruz
-            };
-
-        } else {
-            const ogretmen = document.getElementById('ogretmenIsim').value;
-            const sinif = document.getElementById('sinifSec').value;
-            const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
-
-            if (!ogretmen || !sinif) {
-                alert('Lütfen öğretmen adı ve sınıf seçiniz!');
-                btn.disabled = false;
-                btn.textContent = 'Kayıt Ol';
-                return;
-            }
-
-            const ogrenciler = [];
-            ogrenciInputlar.forEach(input => {
-                if (input.value.trim()) {
-                    ogrenciler.push(input.value.trim());
+                if (!isim || !soyisim || !sinif) {
+                    alert('Lütfen tüm alanları doldurunuz!');
+                    btn.disabled = false;
+                    btn.textContent = 'Kayıt Ol';
+                    return;
                 }
-            });
 
-            if (ogrenciler.length === 0) {
-                alert('En az bir öğrenci ekleyiniz!');
-                btn.disabled = false;
-                btn.textContent = 'Kayıt Ol';
-                return;
+                bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Kayıt ID:</strong> ${kayitID}`;
+                veri = {
+                    tur: 'bireysel',
+                    isim,
+                    soyisim,
+                    sinif,
+                    tarih: now.toLocaleDateString('tr-TR'),
+                    qrData: kayitID,
+                    kayitID
+                };
+
+            } else {
+                const ogretmen = document.getElementById('ogretmenIsim').value.trim();
+                const sinif = document.getElementById('sinifSec').value;
+                const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
+
+                if (!ogretmen || !sinif) {
+                    alert('Lütfen öğretmen adı ve sınıf seçiniz!');
+                    btn.disabled = false;
+                    btn.textContent = 'Kayıt Ol';
+                    return;
+                }
+
+                const ogrenciler = [];
+                ogrenciInputlar.forEach(input => {
+                    if (input.value.trim()) {
+                        ogrenciler.push(input.value.trim());
+                    }
+                });
+
+                if (ogrenciler.length === 0) {
+                    alert('En az bir öğrenci ekleyiniz!');
+                    btn.disabled = false;
+                    btn.textContent = 'Kayıt Ol';
+                    return;
+                }
+
+                bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}<br><strong>Kayıt ID:</strong> ${kayitID}`;
+                veri = {
+                    tur: 'sinif',
+                    ogretmen,
+                    sinif,
+                    ogrenciler,
+                    tarih: now.toLocaleDateString('tr-TR'),
+                    qrData: kayitID,
+                    kayitID
+                };
             }
 
-            bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}`;
-            veri = {
-                tur: 'sinif',
-                ogretmen,
-                sinif,
-                ogrenciler,
-                tarih: now.toLocaleDateString('tr-TR'),
-                qrData: kayitID,   // 🔁 QR kodda sadece ID var
-                kayitID            // 🔁 ID ayrıca gönderiliyor
-            };
-        }
-
-        // QR oluştur
-        const qrCodeDiv = document.getElementById('qrCode');
-        qrCodeDiv.innerHTML = '';
-        try {
+            // QR oluştur
+            const qrCodeDiv = document.getElementById('qrCode');
+            qrCodeDiv.innerHTML = '';
             new QRCode(qrCodeDiv, {
-                text: veri.qrData,  // 🔁 sadece ID içeren QR
+                text: kayitID,
                 width: 256,
                 height: 256,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-            console.log('QR Kod oluşturuldu:', veri.qrData);
-        } catch (error) {
-            console.error('QR oluşturma hatası:', error);
-            qrCodeDiv.innerHTML = '<p style="color: red;">QR kod oluşturulamadı!</p>';
+
+            document.getElementById('qrInfo').innerHTML = bilgi;
+            document.getElementById('kayitForm').style.display = 'none';
+            document.getElementById('qrContainer').style.display = 'block';
+
+            // Veritabanına kaydet
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(veri)
+            })
+            .then(() => {
+                console.log('Kayıt gönderildi:', kayitID);
+            })
+            .catch(error => {
+                console.error('Kayıt hatası:', error);
+            });
+
+            btn.disabled = false;
+            btn.textContent = 'Kayıt Ol';
         }
-
-        document.getElementById('qrInfo').innerHTML = bilgi;
-        document.getElementById('kayitForm').style.display = 'none';
-        document.getElementById('qrContainer').style.display = 'block';
-
-        veritabaninaKaydet(veri); // 🔁 Veri gönderimi QR sonrası
-        btn.disabled = false;
-        btn.textContent = 'Kayıt Ol';
-    }, 1000);
-};
-                
-                function veritabaninaKaydet(veri) {
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
-
-   fetch(GOOGLE_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(veri)
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Veri gönderildi, cevap:', data);
-})
-.catch(error => {
-    console.error('Bağlantı hatası:', error);
-});
-}
-
 
         function yeniKayit() {
             document.querySelectorAll('input').forEach(input => input.value = '');
@@ -522,29 +450,6 @@
             document.getElementById('qrContainer').style.display = 'none';
             document.getElementById('kayitForm').style.display = 'block';
         }
-
-        function veritabaninaKaydet(veri) {
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoaYk6NCKE0_ROAvHvRdMX8P9--lGbgUpV8Z7Wi6CvvhOupb6C_NCEnWQFQFXhAfk9/exec';
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(veri)
-            })
-            .then(() => {
-                console.log('Veri başarıyla gönderildi');
-            })
-            .catch(error => {
-                console.error('Bağlantı hatası:', error);
-            });
-        }
     </script>
 </body>
 </html>
-
-
-
-
