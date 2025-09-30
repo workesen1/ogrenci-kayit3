@@ -595,4 +595,96 @@
                 data.sinif = sinif;
                 
             } else if(tur === 'sinif') {
-                const ogretmen = document.getElementById('og
+                const ogretmen = document.getElementById('ogretmen').value.trim();
+                const sinif = document.getElementById('sinifSec').value;
+                
+                if(!ogretmen || !sinif || ogrenciler.length === 0) {
+                    alert('⚠️ Lütfen tüm alanları doldurun ve en az bir öğrenci ekleyin!');
+                    return;
+                }
+                
+                data.ogretmen = ogretmen;
+                data.sinif = sinif;
+                data.ogrenciler = ogrenciler;
+            }
+            
+            // Yükleniyor göster
+            document.querySelector('.tab-buttons').style.display = 'none';
+            document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                
+                if(result.success) {
+                    showQRCode(data);
+                } else {
+                    console.warn('Kayıt hatası:', result.message);
+                    showQRCode(data);
+                }
+                
+            } catch(error) {
+                console.error('Hata:', error);
+                document.getElementById('loading').style.display = 'none';
+                showQRCode(data);
+            }
+        }
+        
+        function showQRCode(data) {
+            let bilgiHTML = '';
+            
+            if(data.tur === 'bireysel') {
+                bilgiHTML = `
+                    <p><strong>İsim:</strong> ${data.isim} ${data.soyisim}</p>
+                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
+                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
+                `;
+            } else {
+                bilgiHTML = `
+                    <p><strong>Öğretmen:</strong> ${data.ogretmen}</p>
+                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
+                    <p><strong>Öğrenci Sayısı:</strong> ${data.ogrenciler.length}</p>
+                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
+                `;
+            }
+            
+            document.getElementById('kayitBilgi').innerHTML = bilgiHTML;
+            
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: data.kayitID,
+                width: 220,
+                height: 220
+            });
+            
+            document.getElementById('qrResult').style.display = 'block';
+        }
+        
+        function yeniKayit() {
+            document.getElementById('isim').value = '';
+            document.getElementById('soyisim').value = '';
+            document.getElementById('sinif').value = '';
+            document.getElementById('ogretmen').value = '';
+            document.getElementById('sinifSec').value = '';
+            document.getElementById('ogrenciIsim').value = '';
+            ogrenciler = [];
+            updateOgrenciList();
+            
+            document.querySelector('.tab-buttons').style.display = 'flex';
+            document.getElementById('qrResult').style.display = 'none';
+            switchTab('bireysel');
+        }
+    </script>
+</body>
+</html>
