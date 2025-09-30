@@ -16,50 +16,145 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
         
         .container {
             max-width: 500px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 1;
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .logo {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         h1 {
-            text-align: center;
             color: #667eea;
-            margin-bottom: 30px;
             font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #999;
+            font-size: 14px;
         }
         
         .tab-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 30px;
         }
         
         .tab-btn {
             flex: 1;
-            padding: 15px;
-            border: 2px solid #667eea;
+            padding: 16px;
+            border: 3px solid #667eea;
             background: white;
             color: #667eea;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: #667eea;
+            transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        
+        .tab-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .tab-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tab-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
         }
         
         .tab-btn.active {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            border-color: #764ba2;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
         .form-section {
             display: none;
+            animation: fadeIn 0.4s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .form-section.active {
@@ -67,146 +162,278 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #333;
             font-weight: 600;
+            font-size: 15px;
+        }
+        
+        label span {
+            color: #667eea;
         }
         
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            background: #fafafa;
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
         }
         
         .ogrenci-list {
             margin-top: 15px;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 10px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 12px;
+            background: #fafafa;
+        }
+        
+        .ogrenci-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .ogrenci-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .ogrenci-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
         }
         
         .ogrenci-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            background: #f5f5f5;
-            margin-bottom: 8px;
-            border-radius: 5px;
+            padding: 12px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .ogrenci-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
         }
         
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
             color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
+            transform: translateY(-2px);
         }
         
         .btn-danger {
-            background: #ff4757;
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
             color: white;
-            padding: 5px 10px;
+            padding: 8px 16px;
             font-size: 14px;
             width: auto;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff3838 0%, #ff2020 100%);
         }
         
         #qrResult {
             display: none;
             text-align: center;
             padding: 30px;
+            animation: zoomIn 0.5s;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         
         #qrcode {
-            margin: 20px auto;
-            padding: 20px;
+            margin: 25px auto;
+            padding: 25px;
             background: white;
-            border-radius: 10px;
+            border-radius: 20px;
             display: inline-block;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 3px solid #667eea;
         }
         
         .success-message {
             color: #10ac84;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .kayit-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
             text-align: left;
+            border: 2px solid #dee2e6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .kayit-info p {
-            margin: 8px 0;
+            margin: 10px 0;
             color: #555;
+            font-size: 16px;
         }
         
         .kayit-info strong {
-            color: #333;
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎓 Öğrenci Kayıt Sistemi</h1>
+        <div class="header">
+            <div class="logo">🎓</div>
+            <h1>Öğrenci Kayıt Sistemi</h1>
+            <p class="subtitle">Etkinlik giriş sistemi</p>
+        </div>
         
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('bireysel')">👤 Bireysel</button>
-            <button class="tab-btn" onclick="switchTab('sinif')">👥 Sınıf</button>
+            <button class="tab-btn active" onclick="switchTab('bireysel')">
+                <span>👤 Bireysel</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('sinif')">
+                <span>👥 Sınıf</span>
+            </button>
         </div>
         
         <!-- Bireysel Kayıt -->
         <div id="bireyselForm" class="form-section active">
             <div class="form-group">
-                <label>İsim:</label>
+                <label><span>📝</span> İsim:</label>
                 <input type="text" id="isim" placeholder="Adınızı girin">
             </div>
             
             <div class="form-group">
-                <label>Soyisim:</label>
+                <label><span>📝</span> Soyisim:</label>
                 <input type="text" id="soyisim" placeholder="Soyadınızı girin">
             </div>
             
             <div class="form-group">
-                <label>Sınıf:</label>
+                <label><span>🎒</span> Sınıf:</label>
                 <select id="sinif">
                     <option value="">Sınıf seçin</option>
                     <option value="1. Sınıf">1. Sınıf</option>
@@ -217,23 +444,27 @@
                     <option value="6. Sınıf">6. Sınıf</option>
                     <option value="7. Sınıf">7. Sınıf</option>
                     <option value="8. Sınıf">8. Sınıf</option>
+                    <option value="9. Sınıf">9. Sınıf</option>
+                    <option value="10. Sınıf">10. Sınıf</option>
+                    <option value="11. Sınıf">11. Sınıf</option>
+                    <option value="12. Sınıf">12. Sınıf</option>
                 </select>
             </div>
             
             <button class="btn btn-primary" onclick="kayitOl('bireysel')">
-                📝 Kayıt Ol
+                ✅ Kayıt Ol
             </button>
         </div>
         
         <!-- Sınıf Kayıt -->
         <div id="sinifForm" class="form-section">
             <div class="form-group">
-                <label>Öğretmen Adı:</label>
+                <label><span>👨‍🏫</span> Öğretmen Adı:</label>
                 <input type="text" id="ogretmen" placeholder="Öğretmen adını girin">
             </div>
             
             <div class="form-group">
-                <label>Sınıf:</label>
+                <label><span>🎒</span> Sınıf:</label>
                 <select id="sinifSec">
                     <option value="">Sınıf seçin</option>
                     <option value="1. Sınıf">1. Sınıf</option>
@@ -244,11 +475,15 @@
                     <option value="6. Sınıf">6. Sınıf</option>
                     <option value="7. Sınıf">7. Sınıf</option>
                     <option value="8. Sınıf">8. Sınıf</option>
+                    <option value="9. Sınıf">9. Sınıf</option>
+                    <option value="10. Sınıf">10. Sınıf</option>
+                    <option value="11. Sınıf">11. Sınıf</option>
+                    <option value="12. Sınıf">12. Sınıf</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label>Öğrenci İsmi:</label>
+                <label><span>👦</span> Öğrenci İsmi:</label>
                 <input type="text" id="ogrenciIsim" placeholder="Öğrenci adını girin">
             </div>
             
@@ -259,8 +494,14 @@
             <div class="ogrenci-list" id="ogrenciList"></div>
             
             <button class="btn btn-primary" onclick="kayitOl('sinif')">
-                📝 Sınıf Kaydı Oluştur
+                ✅ Sınıf Kaydı Oluştur
             </button>
+        </div>
+        
+        <!-- Yükleniyor -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px; color: #667eea; font-weight: 600;">Kayıt yapılıyor...</p>
         </div>
         
         <!-- QR Sonuç -->
@@ -268,6 +509,7 @@
             <div class="success-message">✅ Kayıt Başarılı!</div>
             <div class="kayit-info" id="kayitBilgi"></div>
             <div id="qrcode"></div>
+            <p style="color: #999; margin: 15px 0;">Bu QR kodu etkinlik girişinde gösterin</p>
             <button class="btn btn-primary" onclick="yeniKayit()">
                 🔄 Yeni Kayıt
             </button>
@@ -276,7 +518,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec'; // Buraya kendi URL'nizi yazın
+        const SCRIPT_URL = 'BURAYA_GOOGLE_SCRIPT_URL_YAZIN'; // Google Apps Script URL'nizi buraya yapıştırın
         
         let ogrenciler = [];
         
@@ -311,11 +553,16 @@
             const listDiv = document.getElementById('ogrenciList');
             listDiv.innerHTML = '';
             
+            if(ogrenciler.length === 0) {
+                listDiv.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Henüz öğrenci eklenmedi</p>';
+                return;
+            }
+            
             ogrenciler.forEach((ogrenci, index) => {
                 const item = document.createElement('div');
                 item.className = 'ogrenci-item';
                 item.innerHTML = `
-                    <span>${index + 1}. ${ogrenci}</span>
+                    <span><strong>${index + 1}.</strong> ${ogrenci}</span>
                     <button class="btn btn-danger" onclick="ogrenciSil(${index})">🗑️</button>
                 `;
                 listDiv.appendChild(item);
@@ -339,7 +586,7 @@
                 const sinif = document.getElementById('sinif').value;
                 
                 if(!isim || !soyisim || !sinif) {
-                    alert('Lütfen tüm alanları doldurun!');
+                    alert('⚠️ Lütfen tüm alanları doldurun!');
                     return;
                 }
                 
@@ -348,99 +595,4 @@
                 data.sinif = sinif;
                 
             } else if(tur === 'sinif') {
-                const ogretmen = document.getElementById('ogretmen').value.trim();
-                const sinif = document.getElementById('sinifSec').value;
-                
-                if(!ogretmen || !sinif || ogrenciler.length === 0) {
-                    alert('Lütfen tüm alanları doldurun ve en az bir öğrenci ekleyin!');
-                    return;
-                }
-                
-                data.ogretmen = ogretmen;
-                data.sinif = sinif;
-                data.ogrenciler = ogrenciler;
-            }
-            
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if(result.success) {
-                    showQRCode(data);
-                } else {
-                    // Hata olsa bile QR göster
-                    console.warn('Kayıt hatası:', result.message);
-                    showQRCode(data);
-                }
-                
-            } catch(error) {
-                console.error('Hata:', error);
-                // Hata olsa bile QR göster
-                showQRCode(data);
-            }
-        }
-        
-        function showQRCode(data) {
-            // Formu gizle
-            document.querySelector('.tab-buttons').style.display = 'none';
-            document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
-            
-            // Kayıt bilgilerini göster
-            let bilgiHTML = '';
-            
-            if(data.tur === 'bireysel') {
-                bilgiHTML = `
-                    <p><strong>İsim:</strong> ${data.isim} ${data.soyisim}</p>
-                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
-                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
-                `;
-            } else {
-                bilgiHTML = `
-                    <p><strong>Öğretmen:</strong> ${data.ogretmen}</p>
-                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
-                    <p><strong>Öğrenci Sayısı:</strong> ${data.ogrenciler.length}</p>
-                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
-                `;
-            }
-            
-            document.getElementById('kayitBilgi').innerHTML = bilgiHTML;
-            
-            // QR kod oluştur
-            document.getElementById('qrcode').innerHTML = '';
-            new QRCode(document.getElementById('qrcode'), {
-                text: data.kayitID,
-                width: 200,
-                height: 200
-            });
-            
-            document.getElementById('qrResult').style.display = 'block';
-        }
-        
-        function yeniKayit() {
-            // Formu temizle
-            document.getElementById('isim').value = '';
-            document.getElementById('soyisim').value = '';
-            document.getElementById('sinif').value = '';
-            document.getElementById('ogretmen').value = '';
-            document.getElementById('sinifSec').value = '';
-            document.getElementById('ogrenciIsim').value = '';
-            ogrenciler = [];
-            updateOgrenciList();
-            
-            // Görseli sıfırla
-            document.querySelector('.tab-buttons').style.display = 'flex';
-            document.getElementById('qrResult').style.display = 'none';
-            switchTab('bireysel');
-        }
-    </script>
-</body>
-</html>
-
+                const ogretmen = document.getElementById('og
