@@ -146,6 +146,15 @@
         #qr-shaded-region {
             border: 3px solid #2ed573 !important;
         }
+
+        .detay-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -184,7 +193,6 @@
 
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
-        
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
 
         let basariliSayac = 0;
@@ -210,29 +218,47 @@
             if (islemDevam) return;
             islemDevam = true;
 
+            console.log('QR Doğrulanıyor:', qrData);
             gosterMesaj('⏳ Doğrulanıyor...', 'bekliyor');
 
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     action: 'dogrula',
-                    qrData: qrData
+                    qrData: qrData.trim()
                 })
             })
-            .then(response => response.json())
+            .then(() => {
+                // no-cors modunda yanıt okunamaz, alternatif kontrol
+                console.log('İstek gönderildi');
+                
+                // Geçici çözüm: GET isteği ile doğrulama
+                return fetch(GOOGLE_SCRIPT_URL + '?verify=' + encodeURIComponent(qrData.trim()));
+            })
+            .then(response => {
+                if (response && response.ok) {
+                    return response.json();
+                }
+                throw new Error('Yanıt alınamadı');
+            })
             .then(data => {
                 toplamSayac++;
 
-                if (data.verified) {
+                if (data && data.verified) {
                     basariliSayac++;
-                    gosterMesaj('✅ ' + data.message, 'basarili');
+                    let mesaj = '✅ ' + (data.message || 'Kayıt bulundu!');
+                    if (data.detay) {
+                        mesaj += '<div class="detay-info">' + data.detay + '</div>';
+                    }
+                    gosterMesaj(mesaj, 'basarili');
                     navigator.vibrate && navigator.vibrate([200, 100, 200]);
                 } else {
                     basarisizSayac++;
-                    gosterMesaj('❌ ' + data.message, 'basarisiz');
+                    gosterMesaj('❌ ' + (data?.message || 'Kayıt bulunamadı!'), 'basarisiz');
                     navigator.vibrate && navigator.vibrate([500]);
                 }
 
@@ -244,7 +270,12 @@
                 }, 3000);
             })
             .catch(error => {
-                console.log("Sunucuya ulaşılamadı, beklemeye alındı:", error);
+                console.error('Doğrulama hatası:', error);
+                basarisizSayac++;
+                toplamSayac++;
+                gosterMesaj('⚠️ Bağlantı hatası! Tekrar deneyin.', 'basarisiz');
+                istatistikleriGuncelle();
+                
                 setTimeout(() => {
                     islemDevam = false;
                     gosterMesaj('📸 Yeni QR kod bekliyor...', 'bekliyor');
@@ -255,6 +286,7 @@
         function onScanSuccess(decodedText, decodedResult) {
             const simdikiZaman = Date.now();
 
+            // Aynı QR kodu 3 saniye içinde tekrar okumayı engelle
             if (decodedText === sonOkunanQR && (simdikiZaman - sonOkumaZamani) < 3000) {
                 return;
             }
@@ -262,14 +294,15 @@
             sonOkunanQR = decodedText;
             sonOkumaZamani = simdikiZaman;
 
-            console.log(`QR Kod okundu: ${decodedText}`);
+            console.log('QR Kod okundu:', decodedText);
             qrKoduDogrula(decodedText);
         }
 
         function onScanFailure(error) {
-            // Sessiz geç
+            // Sessiz kalır, sürekli hata loglamaz
         }
 
+        // QR tarayıcı başlat
         const html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { 
