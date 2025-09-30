@@ -385,111 +385,126 @@
             ogrenciSayisi = ogrenciItems.length;
         }
 
-        function kayitOl() {
-            const btn = document.getElementById('kayitBtn');
-            
-            btn.disabled = true;
-            btn.textContent = 'İşleniyor...';
-            
-            setTimeout(() => {
-                let qrData = '';
-                let bilgi = '';
-                
-                if (kayitTuru === 'bireysel') {
-                    const isim = document.getElementById('isim').value;
-                    const soyisim = document.getElementById('soyisim').value;
-                    const sinif = document.getElementById('sinif').value;
-                    
-                    if (!isim || !soyisim || !sinif) {
-                        alert('Lütfen tüm alanları doldurunuz!');
-                        btn.disabled = false;
-                        btn.textContent = 'Kayıt Ol';
-                        return;
-                    }
-                    
-                    qrData = `İsim: ${isim} ${soyisim}\nSınıf: ${sinif}`;
-                    bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}`;
-                    
-                } else {
-                    const ogretmen = document.getElementById('ogretmenIsim').value;
-                    const sinif = document.getElementById('sinifSec').value;
-                    const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
-                    
-                    if (!ogretmen || !sinif) {
-                        alert('Lütfen öğretmen adı ve sınıf seçiniz!');
-                        btn.disabled = false;
-                        btn.textContent = 'Kayıt Ol';
-                        return;
-                    }
-                    
-                    const ogrenciler = [];
-                    ogrenciInputlar.forEach(input => {
-                        if (input.value.trim()) {
-                            ogrenciler.push(input.value.trim());
-                        }
-                    });
-                    
-                    if (ogrenciler.length === 0) {
-                        alert('En az bir öğrenci ekleyiniz!');
-                        btn.disabled = false;
-                        btn.textContent = 'Kayıt Ol';
-                        return;
-                    }
-                    
-                    qrData = `Öğretmen: ${ogretmen}\nSınıf: ${sinif}\nÖğrenciler: ${ogrenciler.join(', ')}`;
-                    bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}`;
-                }
-                
-                // Google Sheets'e kaydet
-                const kayitVerisi = kayitTuru === 'bireysel' ? {
-                    tur: 'bireysel',
-                    isim: document.getElementById('isim').value,
-                    soyisim: document.getElementById('soyisim').value,
-                    sinif: document.getElementById('sinif').value,
-                    tarih: new Date().toLocaleDateString('tr-TR'),
-                    qrData: qrData
-                } : {
-                    tur: 'sinif',
-                    ogretmen: document.getElementById('ogretmenIsim').value,
-                    sinif: document.getElementById('sinifSec').value,
-                    ogrenciler: Array.from(document.querySelectorAll('.ogrenci-input')).filter(input => input.value.trim()).map(input => input.value.trim()),
-                    tarih: new Date().toLocaleDateString('tr-TR'),
-                    qrData: qrData
-                };
-                
-                veritabaninaKaydet(kayitVerisi);
-                
-                // QR kod oluştur - QRCode.js kütüphanesi ile
-                const qrCodeDiv = document.getElementById('qrCode');
-                qrCodeDiv.innerHTML = ''; // Önceki QR'ı temizle
-                
-                try {
-                    new QRCode(qrCodeDiv, {
-                        text: qrData,
-                        width: 256,
-                        height: 256,
-                        colorDark: "#000000",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                    
-                    console.log('QR Kod oluşturuldu:', qrData);
-                } catch (error) {
-                    console.error('QR oluşturma hatası:', error);
-                    qrCodeDiv.innerHTML = '<p style="color: red;">QR kod oluşturulamadı!</p>';
-                }
-                
-                document.getElementById('qrInfo').innerHTML = bilgi;
-                
-                // Form gizle, QR göster
-                document.getElementById('kayitForm').style.display = 'none';
-                document.getElementById('qrContainer').style.display = 'block';
-                
+       function kayitOl() {
+    const btn = document.getElementById('kayitBtn');
+    btn.disabled = true;
+    btn.textContent = 'İşleniyor...';
+
+    setTimeout(() => {
+        let bilgi = '';
+        const now = new Date();
+        const kayitID = 'KYT' + now.getTime();
+
+        let veri;
+
+        if (kayitTuru === 'bireysel') {
+            const isim = document.getElementById('isim').value;
+            const soyisim = document.getElementById('soyisim').value;
+            const sinif = document.getElementById('sinif').value;
+
+            if (!isim || !soyisim || !sinif) {
+                alert('Lütfen tüm alanları doldurunuz!');
                 btn.disabled = false;
                 btn.textContent = 'Kayıt Ol';
-                
-            }, 1500);
+                return;
+            }
+
+            bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}`;
+            veri = {
+                tur: 'bireysel',
+                isim,
+                soyisim,
+                sinif,
+                tarih: now.toLocaleDateString('tr-TR'),
+                qrData: kayitID,  // 🔁 Artık QR kodda uzun veri değil, sadece ID var
+                kayitID           // 🔁 Kaydı sistemde de gönderiyoruz
+            };
+
+        } else {
+            const ogretmen = document.getElementById('ogretmenIsim').value;
+            const sinif = document.getElementById('sinifSec').value;
+            const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
+
+            if (!ogretmen || !sinif) {
+                alert('Lütfen öğretmen adı ve sınıf seçiniz!');
+                btn.disabled = false;
+                btn.textContent = 'Kayıt Ol';
+                return;
+            }
+
+            const ogrenciler = [];
+            ogrenciInputlar.forEach(input => {
+                if (input.value.trim()) {
+                    ogrenciler.push(input.value.trim());
+                }
+            });
+
+            if (ogrenciler.length === 0) {
+                alert('En az bir öğrenci ekleyiniz!');
+                btn.disabled = false;
+                btn.textContent = 'Kayıt Ol';
+                return;
+            }
+
+            bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}`;
+            veri = {
+                tur: 'sinif',
+                ogretmen,
+                sinif,
+                ogrenciler,
+                tarih: now.toLocaleDateString('tr-TR'),
+                qrData: kayitID,   // 🔁 QR kodda sadece ID var
+                kayitID            // 🔁 ID ayrıca gönderiliyor
+            };
         }
+
+        // QR oluştur
+        const qrCodeDiv = document.getElementById('qrCode');
+        qrCodeDiv.innerHTML = '';
+        try {
+            new QRCode(qrCodeDiv, {
+                text: veri.qrData,  // 🔁 sadece ID içeren QR
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            console.log('QR Kod oluşturuldu:', veri.qrData);
+        } catch (error) {
+            console.error('QR oluşturma hatası:', error);
+            qrCodeDiv.innerHTML = '<p style="color: red;">QR kod oluşturulamadı!</p>';
+        }
+
+        document.getElementById('qrInfo').innerHTML = bilgi;
+        document.getElementById('kayitForm').style.display = 'none';
+        document.getElementById('qrContainer').style.display = 'block';
+
+        veritabaninaKaydet(veri); // 🔁 Veri gönderimi QR sonrası
+        btn.disabled = false;
+        btn.textContent = 'Kayıt Ol';
+    }, 1000);
+};
+                
+                function veritabaninaKaydet(veri) {
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoaYk6NCKE0_ROAvHvRdMX8P9--lGbgUpV8Z7Wi6CvvhOupb6C_NCEnWQFQFXhAfk9/exec';
+
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(veri)
+    })
+    .then(() => {
+        console.log('Veri başarıyla gönderildi');
+    })
+    .catch(error => {
+        console.error('Bağlantı hatası:', error);
+    });
+}
+
 
         function yeniKayit() {
             document.querySelectorAll('input').forEach(input => input.value = '');
@@ -531,4 +546,5 @@
     </script>
 </body>
 </html>
+
 
