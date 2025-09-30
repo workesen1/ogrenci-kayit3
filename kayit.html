@@ -16,26 +16,6 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: backgroundMove 20s linear infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes backgroundMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
         }
         
         .container {
@@ -45,20 +25,6 @@
             border-radius: 25px;
             padding: 40px;
             box-shadow: 0 25px 70px rgba(0,0,0,0.4);
-            position: relative;
-            z-index: 1;
-            animation: slideDown 0.6s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .header {
@@ -69,12 +35,6 @@
         .logo {
             font-size: 60px;
             margin-bottom: 10px;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
         
         h1 {
@@ -105,56 +65,21 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 700;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tab-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: #667eea;
-            transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-        }
-        
-        .tab-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .tab-btn span {
-            position: relative;
-            z-index: 1;
+            transition: all 0.3s;
         }
         
         .tab-btn:hover {
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            background: #667eea;
         }
         
         .tab-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-color: #764ba2;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
         .form-section {
             display: none;
-            animation: fadeIn 0.4s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         
         .form-section.active {
@@ -173,10 +98,6 @@
             font-size: 15px;
         }
         
-        label span {
-            color: #667eea;
-        }
-        
         input, select {
             width: 100%;
             padding: 14px;
@@ -191,8 +112,6 @@
             outline: none;
             border-color: #667eea;
             background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
         }
         
         .ogrenci-list {
@@ -205,20 +124,6 @@
             background: #fafafa;
         }
         
-        .ogrenci-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .ogrenci-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .ogrenci-list::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-        
         .ogrenci-item {
             display: flex;
             justify-content: space-between;
@@ -228,24 +133,6 @@
             margin-bottom: 10px;
             border-radius: 10px;
             border: 2px solid #f0f0f0;
-            transition: all 0.3s;
-            animation: slideIn 0.3s;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .ogrenci-item:hover {
-            border-color: #667eea;
-            transform: translateX(5px);
         }
         
         .btn {
@@ -256,34 +143,13 @@
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             margin-top: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn:active::after {
-            width: 300px;
-            height: 300px;
         }
         
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
         .btn-primary:hover {
@@ -291,50 +157,23 @@
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
         }
         
-        .btn-primary:active {
-            transform: translateY(-1px);
-        }
-        
         .btn-secondary {
-            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            background: #f5f5f5;
             color: #333;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
-            transform: translateY(-2px);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+            background: #ff4757;
             color: white;
             padding: 8px 16px;
             font-size: 14px;
             width: auto;
-            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
-        }
-        
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #ff3838 0%, #ff2020 100%);
         }
         
         #qrResult {
             display: none;
             text-align: center;
             padding: 30px;
-            animation: zoomIn 0.5s;
-        }
-        
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
         
         #qrcode {
@@ -347,27 +186,25 @@
             border: 3px solid #667eea;
         }
         
+        #qrcode canvas {
+            display: block !important;
+            margin: 0 auto !important;
+        }
+        
         .success-message {
             color: #10ac84;
             font-size: 28px;
             font-weight: 800;
             margin-bottom: 20px;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
         
         .kayit-info {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
             margin: 20px 0;
             text-align: left;
             border: 2px solid #dee2e6;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .kayit-info p {
@@ -413,27 +250,26 @@
         
         <div class="tab-buttons">
             <button class="tab-btn active" onclick="switchTab('bireysel')">
-                <span>👤 Bireysel</span>
+                Bireysel
             </button>
             <button class="tab-btn" onclick="switchTab('sinif')">
-                <span>👥 Sınıf</span>
+                Sınıf
             </button>
         </div>
         
-        <!-- Bireysel Kayıt -->
         <div id="bireyselForm" class="form-section active">
             <div class="form-group">
-                <label><span>📝</span> İsim:</label>
+                <label>İsim:</label>
                 <input type="text" id="isim" placeholder="Adınızı girin">
             </div>
             
             <div class="form-group">
-                <label><span>📝</span> Soyisim:</label>
+                <label>Soyisim:</label>
                 <input type="text" id="soyisim" placeholder="Soyadınızı girin">
             </div>
             
             <div class="form-group">
-                <label><span>🎒</span> Sınıf:</label>
+                <label>Sınıf:</label>
                 <select id="sinif">
                     <option value="">Sınıf seçin</option>
                     <option value="1. Sınıf">1. Sınıf</option>
@@ -456,15 +292,14 @@
             </button>
         </div>
         
-        <!-- Sınıf Kayıt -->
         <div id="sinifForm" class="form-section">
             <div class="form-group">
-                <label><span>👨‍🏫</span> Öğretmen Adı:</label>
+                <label>Öğretmen Adı:</label>
                 <input type="text" id="ogretmen" placeholder="Öğretmen adını girin">
             </div>
             
             <div class="form-group">
-                <label><span>🎒</span> Sınıf:</label>
+                <label>Sınıf:</label>
                 <select id="sinifSec">
                     <option value="">Sınıf seçin</option>
                     <option value="1. Sınıf">1. Sınıf</option>
@@ -483,7 +318,7 @@
             </div>
             
             <div class="form-group">
-                <label><span>👦</span> Öğrenci İsmi:</label>
+                <label>Öğrenci İsmi:</label>
                 <input type="text" id="ogrenciIsim" placeholder="Öğrenci adını girin">
             </div>
             
@@ -498,15 +333,13 @@
             </button>
         </div>
         
-        <!-- Yükleniyor -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
             <p style="margin-top: 15px; color: #667eea; font-weight: 600;">Kayıt yapılıyor...</p>
         </div>
         
-        <!-- QR Sonuç -->
         <div id="qrResult">
-            <div class="success-message">Kayıt Başarılı!</div>
+            <div class="success-message">Kayıt Başarılı</div>
             <div class="kayit-info" id="kayitBilgi"></div>
             <div id="qrcode"></div>
             <p style="color: #999; margin: 15px 0;">Bu QR kodu etkinlik girişinde gösterin</p>
@@ -516,7 +349,7 @@
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec';
         
@@ -563,7 +396,7 @@
                 item.className = 'ogrenci-item';
                 item.innerHTML = `
                     <span><strong>${index + 1}.</strong> ${ogrenci}</span>
-                    <button class="btn btn-danger" onclick="ogrenciSil(${index})">🗑️</button>
+                    <button class="btn btn-danger" onclick="ogrenciSil(${index})">Sil</button>
                 `;
                 listDiv.appendChild(item);
             });
@@ -607,6 +440,8 @@
                 data.ogrenciler = ogrenciler;
             }
             
+            console.log('Kayıt verisi:', data);
+            
             document.querySelector('.tab-buttons').style.display = 'none';
             document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
             document.getElementById('loading').style.display = 'block';
@@ -621,18 +456,23 @@
                 });
                 
                 const result = await response.json();
+                console.log('Sunucu yanıtı:', result);
                 
                 document.getElementById('loading').style.display = 'none';
                 showQRCode(data);
                 
             } catch(error) {
-                console.error('HATA:', error);
-                alert('Hata: ' + error.message);
+                console.error('Hata:', error);
+                alert('Kayıt hatası: ' + error.message);
                 document.getElementById('loading').style.display = 'none';
+                document.querySelector('.tab-buttons').style.display = 'flex';
+                document.getElementById(tur === 'bireysel' ? 'bireyselForm' : 'sinifForm').style.display = 'block';
             }
         }
         
         function showQRCode(data) {
+            console.log('QR kod oluşturuluyor:', data.kayitID);
+            
             let bilgiHTML = '';
             
             if(data.tur === 'bireysel') {
@@ -652,17 +492,29 @@
             
             document.getElementById('kayitBilgi').innerHTML = bilgiHTML;
             
-            document.getElementById('qrcode').innerHTML = '';
-            new QRCode(document.getElementById('qrcode'), {
-                text: data.kayitID,
-                width: 220,
-                height: 220
-            });
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            try {
+                new QRCode(qrcodeDiv, {
+                    text: data.kayitID,
+                    width: 220,
+                    height: 220,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                console.log('QR kod oluşturuldu');
+            } catch(e) {
+                console.error('QR kod hatası:', e);
+                qrcodeDiv.innerHTML = '<p style="color: red;">QR kod oluşturulamadı</p>';
+            }
             
             document.getElementById('qrResult').style.display = 'block';
         }
         
         function yeniKayit() {
+            // Formu temizle
             document.getElementById('isim').value = '';
             document.getElementById('soyisim').value = '';
             document.getElementById('sinif').value = '';
@@ -672,9 +524,21 @@
             ogrenciler = [];
             updateOgrenciList();
             
-            document.querySelector('.tab-buttons').style.display = 'flex';
+            // QR sonucunu gizle
             document.getElementById('qrResult').style.display = 'none';
-            switchTab('bireysel');
+            
+            // Tab butonlarını göster
+            document.querySelector('.tab-buttons').style.display = 'flex';
+            
+            // Bireysel formu göster
+            document.getElementById('bireyselForm').style.display = 'block';
+            document.getElementById('bireyselForm').classList.add('active');
+            document.getElementById('sinifForm').style.display = 'none';
+            document.getElementById('sinifForm').classList.remove('active');
+            
+            // Tab butonlarını aktif et
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.remove('active');
         }
     </script>
 </body>
