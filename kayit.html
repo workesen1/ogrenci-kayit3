@@ -575,71 +575,60 @@
         }
         
         async function kayitOl(tur) {
-            let data = {
-                tur: tur,
-                kayitID: 'KYT' + Date.now()
-            };
-            
-            if(tur === 'bireysel') {
-                const isim = document.getElementById('isim').value.trim();
-                const soyisim = document.getElementById('soyisim').value.trim();
-                const sinif = document.getElementById('sinif').value;
-                
-                if(!isim || !soyisim || !sinif) {
-                    alert('⚠️ Lütfen tüm alanları doldurun!');
-                    return;
-                }
-                
-                data.isim = isim;
-                data.soyisim = soyisim;
-                data.sinif = sinif;
-                
-            } else if(tur === 'sinif') {
-                const ogretmen = document.getElementById('ogretmen').value.trim();
-                const sinif = document.getElementById('sinifSec').value;
-                
-                if(!ogretmen || !sinif || ogrenciler.length === 0) {
-                    alert('⚠️ Lütfen tüm alanları doldurun ve en az bir öğrenci ekleyin!');
-                    return;
-                }
-                
-                data.ogretmen = ogretmen;
-                data.sinif = sinif;
-                data.ogrenciler = ogrenciler;
-            }
-            
-            // Yükleniyor göster
-            document.querySelector('.tab-buttons').style.display = 'none';
-            document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
-            document.getElementById('loading').style.display = 'block';
-            
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                document.getElementById('loading').style.display = 'none';
-                
-                if(result.success) {
-                    showQRCode(data);
-                } else {
-                    console.warn('Kayıt hatası:', result.message);
-                    showQRCode(data);
-                }
-                
-            } catch(error) {
-                console.error('Hata:', error);
-                document.getElementById('loading').style.display = 'none';
-                showQRCode(data);
-            }
+    let data = {
+        tur: tur,
+        kayitID: 'KYT' + Date.now()
+    };
+    
+    if(tur === 'bireysel') {
+        const isim = document.getElementById('isim').value.trim();
+        const soyisim = document.getElementById('soyisim').value.trim();
+        const sinif = document.getElementById('sinif').value;
+        
+        if(!isim || !soyisim || !sinif) {
+            alert('Lütfen tüm alanları doldurun!');
+            return;
         }
+        
+        data.isim = isim;
+        data.soyisim = soyisim;
+        data.sinif = sinif;
+    }
+    
+    // Debug için
+    console.log('Gönderilen veri:', data);
+    console.log('URL:', SCRIPT_URL);
+    
+    document.querySelector('.tab-buttons').style.display = 'none';
+    document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
+    document.getElementById('loading').style.display = 'block';
+    
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        console.log('Response status:', response.status);
+        
+        const text = await response.text();
+        console.log('Response text:', text);
+        
+        const result = JSON.parse(text);
+        console.log('Parsed result:', result);
+        
+        document.getElementById('loading').style.display = 'none';
+        showQRCode(data);
+        
+    } catch(error) {
+        console.error('HATA:', error);
+        alert('Hata: ' + error.message);
+        document.getElementById('loading').style.display = 'none';
+    }
+}
         
         function showQRCode(data) {
             let bilgiHTML = '';
@@ -688,4 +677,5 @@
     </script>
 </body>
 </html>
+
 
