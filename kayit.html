@@ -452,7 +452,7 @@
             </div>
             
             <button class="btn btn-primary" onclick="kayitOl('bireysel')">
-                ✅ Kayıt Ol
+                Kayıt Ol
             </button>
         </div>
         
@@ -488,13 +488,13 @@
             </div>
             
             <button class="btn btn-secondary" onclick="ogrenciEkle()">
-                ➕ Öğrenci Ekle
+                Öğrenci Ekle
             </button>
             
             <div class="ogrenci-list" id="ogrenciList"></div>
             
             <button class="btn btn-primary" onclick="kayitOl('sinif')">
-                ✅ Sınıf Kaydı Oluştur
+                Sınıf Kaydı Oluştur
             </button>
         </div>
         
@@ -506,19 +506,19 @@
         
         <!-- QR Sonuç -->
         <div id="qrResult">
-            <div class="success-message">✅ Kayıt Başarılı!</div>
+            <div class="success-message">Kayıt Başarılı!</div>
             <div class="kayit-info" id="kayitBilgi"></div>
             <div id="qrcode"></div>
             <p style="color: #999; margin: 15px 0;">Bu QR kodu etkinlik girişinde gösterin</p>
             <button class="btn btn-primary" onclick="yeniKayit()">
-                🔄 Yeni Kayıt
+                Yeni Kayıt
             </button>
         </div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec'; // Google Apps Script URL'nizi buraya yapıştırın
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec';
         
         let ogrenciler = [];
         
@@ -575,60 +575,62 @@
         }
         
         async function kayitOl(tur) {
-    let data = {
-        tur: tur,
-        kayitID: 'KYT' + Date.now()
-    };
-    
-    if(tur === 'bireysel') {
-        const isim = document.getElementById('isim').value.trim();
-        const soyisim = document.getElementById('soyisim').value.trim();
-        const sinif = document.getElementById('sinif').value;
-        
-        if(!isim || !soyisim || !sinif) {
-            alert('Lütfen tüm alanları doldurun!');
-            return;
+            let data = {
+                tur: tur,
+                kayitID: 'KYT' + Date.now()
+            };
+            
+            if(tur === 'bireysel') {
+                const isim = document.getElementById('isim').value.trim();
+                const soyisim = document.getElementById('soyisim').value.trim();
+                const sinif = document.getElementById('sinif').value;
+                
+                if(!isim || !soyisim || !sinif) {
+                    alert('Lütfen tüm alanları doldurun!');
+                    return;
+                }
+                
+                data.isim = isim;
+                data.soyisim = soyisim;
+                data.sinif = sinif;
+            } else if(tur === 'sinif') {
+                const ogretmen = document.getElementById('ogretmen').value.trim();
+                const sinif = document.getElementById('sinifSec').value;
+                
+                if(!ogretmen || !sinif || ogrenciler.length === 0) {
+                    alert('Lütfen tüm alanları doldurun ve en az bir öğrenci ekleyin!');
+                    return;
+                }
+                
+                data.ogretmen = ogretmen;
+                data.sinif = sinif;
+                data.ogrenciler = ogrenciler;
+            }
+            
+            document.querySelector('.tab-buttons').style.display = 'none';
+            document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                showQRCode(data);
+                
+            } catch(error) {
+                console.error('HATA:', error);
+                alert('Hata: ' + error.message);
+                document.getElementById('loading').style.display = 'none';
+            }
         }
-        
-        data.isim = isim;
-        data.soyisim = soyisim;
-        data.sinif = sinif;
-    }
-    
-    // Debug için
-    console.log('Gönderilen veri:', data);
-    console.log('URL:', SCRIPT_URL);
-    
-    document.querySelector('.tab-buttons').style.display = 'none';
-    document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
-    document.getElementById('loading').style.display = 'block';
-    
-    try {
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify(data)
-        });
-        
-        console.log('Response status:', response.status);
-        
-        const text = await response.text();
-        console.log('Response text:', text);
-        
-        const result = JSON.parse(text);
-        console.log('Parsed result:', result);
-        
-        document.getElementById('loading').style.display = 'none';
-        showQRCode(data);
-        
-    } catch(error) {
-        console.error('HATA:', error);
-        alert('Hata: ' + error.message);
-        document.getElementById('loading').style.display = 'none';
-    }
-}
         
         function showQRCode(data) {
             let bilgiHTML = '';
@@ -677,5 +679,3 @@
     </script>
 </body>
 </html>
-
-
