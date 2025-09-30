@@ -2,74 +2,31 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR Kod Doğrulama</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition: background 0.5s;}
-.container{background:white;padding:25px;border-radius:15px;box-shadow:0 15px 35px rgba(0,0,0,0.2);max-width:600px;width:100%;margin-top:20px;}
-h1{color:#333;margin-bottom:20px;font-size:24px;font-weight:600;text-align:center;}
-.info{background:#e7f3ff;border-left:4px solid #2196F3;padding:15px;margin-bottom:20px;border-radius:5px;font-size:14px;color:#333;}
-#reader{width:100%;border:3px solid #667eea;border-radius:10px;overflow:hidden;margin-bottom:20px;}
-#dogrulama-sonuc{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:30px 50px;border-radius:15px;font-size:48px;font-weight:900;text-align:center;display:none;z-index:9999;color:white;text-shadow: 2px 2px 5px rgba(0,0,0,0.3);}
-.basarili{display:block;animation:fadeIn 0.5s;}
-.basarisiz{background:#ffc107;color:#856404;display:block;animation:fadeIn 0.5s;padding:20px;}
-@keyframes fadeIn{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
-.stats{display:flex;justify-content:space-around;margin:20px 0;padding:15px;background:#f8f9fa;border-radius:8px;width:100%;}
-.stat-item{text-align:center;}
-.stat-number{font-size:28px;font-weight:bold;color:#667eea;}
-.stat-label{font-size:12px;color:#666;margin-top:5px;}
-.btn{width:100%;padding:15px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;border-radius:10px;font-size:18px;font-weight:600;cursor:pointer;transition:all 0.3s ease;margin-top:10px;}
-.btn:active{transform:scale(0.98);}
-.btn-secondary{background:#95a5a6;}
+body{margin:0;font-family:sans-serif;transition: background 0.5s;}
+.container{padding:20px;max-width:600px;margin:auto;}
+#reader{width:100%;border:3px solid #667eea;border-radius:10px;margin-bottom:20px;}
+#dogrulama-sonuc{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:900;color:white;padding:30px 50px;border-radius:20px;display:none;z-index:9999;text-align:center;text-shadow:2px 2px 5px rgba(0,0,0,0.3);}
+.basarili{display:block;}
+.basarisiz{background:#ffc107;color:#856404;display:block;padding:20px;}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>📱 QR Kod Doğrulama</h1>
-
-<div class="info">
-<strong>📸 Nasıl Kullanılır?</strong><br>
-• QR kodu kamera karşısına tutun<br>
-• Çerçeve içinde ortalayın<br>
-• 15-20 cm uzaklıkta tutun<br>
-• Otomatik okuyacak
-</div>
-
 <div id="reader"></div>
-<div class="stats">
-<div class="stat-item">
-<div class="stat-number" id="basarili-sayac">0</div>
-<div class="stat-label">Başarılı</div>
-</div>
-<div class="stat-item">
-<div class="stat-number" id="basarisiz-sayac" style="color:#856404;">0</div>
-<div class="stat-label">Uyarı</div>
-</div>
-<div class="stat-item">
-<div class="stat-number" id="toplam-sayac" style="color:#2ed573;">0</div>
-<div class="stat-label">Toplam</div>
-</div>
-</div>
-
-<button class="btn btn-secondary" onclick="location.reload()">🔄 Yeniden Başlat</button>
-</div>
-
 <div id="dogrulama-sonuc"></div>
+</div>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
-let basariliSayac=0, basarisizSayac=0, toplamSayac=0, sonOkunanQR='', sonOkumaZamani=0, islemDevam=false;
+const GOOGLE_SCRIPT_URL='https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
 const sonucDiv=document.getElementById('dogrulama-sonuc');
+let islemDevam=false, sonOkunanQR='', sonOkumaZamani=0;
 
-function istatistikleriGuncelle(){
-  document.getElementById('basarili-sayac').textContent=basariliSayac;
-  document.getElementById('basarisiz-sayac').textContent=basarisizSayac;
-  document.getElementById('toplam-sayac').textContent=toplamSayac;
-}
-
-function gosterMesaj(mesaj, tip){
+function gosterMesaj(mesaj,tip){
   if(tip==='basarili'){
     document.body.style.backgroundColor='#28a745';
     sonucDiv.className='basarili';
@@ -80,41 +37,35 @@ function gosterMesaj(mesaj, tip){
     navigator.vibrate && navigator.vibrate([200,100,200]);
     setTimeout(()=>{
       sonucDiv.style.display='none';
-      document.body.style.backgroundColor='linear-gradient(135deg,#667eea 0%,#764ba2 100%)';
+      document.body.style.background='linear-gradient(135deg,#667eea 0%,#764ba2 100%)';
+      islemDevam=false;
     },3000);
   } else {
     sonucDiv.className='basarisiz';
     sonucDiv.innerHTML=mesaj;
     sonucDiv.style.display='block';
     navigator.vibrate && navigator.vibrate([500]);
-    setTimeout(()=>{sonucDiv.style.display='none';},3000);
+    setTimeout(()=>{sonucDiv.style.display='none';islemDevam=false;},3000);
   }
 }
 
 function qrKoduDogrula(qrData){
   if(islemDevam) return;
   islemDevam=true;
-
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     mode:'cors',
-    body:JSON.stringify({action:'dogrula', qrData:qrData})
+    body:JSON.stringify({action:'dogrula',qrData})
   })
-  .then(response=>response.json())
+  .then(res=>res.json())
   .then(data=>{
-    toplamSayac++;
-    if(data.verified){ basariliSayac++; gosterMesaj('✅ Hoşgeldiniz!','basarili'); }
-    else{ basarisizSayac++; gosterMesaj('⚠️ '+data.message,'basarisiz'); }
-    istatistikleriGuncelle();
-    setTimeout(()=>{islemDevam=false;},3000);
+    if(data.verified) gosterMesaj('✅ Hoşgeldiniz!','basarili');
+    else gosterMesaj('⚠️ '+data.message,'basarisiz');
   })
-  .catch(error=>{
-    console.error('Doğrulama hatası:',error);
-    basarisizSayac++; toplamSayac++;
+  .catch(err=>{
+    console.error(err);
     gosterMesaj('⚠️ Bağlantı hatası','basarisiz');
-    istatistikleriGuncelle();
-    setTimeout(()=>{islemDevam=false;},3000);
   });
 }
 
@@ -125,13 +76,8 @@ function onScanSuccess(decodedText){
   qrKoduDogrula(decodedText);
 }
 
-function onScanFailure(error){}
-
-new Html5QrcodeScanner(
-  "reader",
-  { fps:10, qrbox:{width:250,height:250}, aspectRatio:1.0, rememberLastUsedCamera:true, showTorchButtonIfSupported:true, formatsToSupport:[ Html5QrcodeSupportedFormats.QR_CODE ] },
-  false
-).render(onScanSuccess,onScanFailure);
+new Html5QrcodeScanner("reader",{fps:10,qrbox:250,rememberLastUsedCamera:true,showTorchButtonIfSupported:true,formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE]},false)
+.render(onScanSuccess,()=>{});
 </script>
 </body>
 </html>
