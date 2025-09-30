@@ -54,10 +54,9 @@
 
         #dogrulama-sonuc {
             margin: 20px 0;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             font-size: 16px;
-            font-weight: 600;
             display: none;
             text-align: center;
         }
@@ -72,11 +71,12 @@
         }
 
         .basarisiz {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
+            background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+            color: white;
+            border: 2px solid #ff3838;
             display: block;
             animation: shake 0.5s;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
         }
 
         .bekliyor {
@@ -144,17 +144,25 @@
             background: #95a5a6;
         }
 
-        #qr-shaded-region {
-            border: 3px solid #2ed573 !important;
-        }
-
         .detay-info {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 12px;
             border-radius: 5px;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
             text-align: left;
+            line-height: 1.6;
+        }
+
+        .big-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .big-text {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -194,6 +202,7 @@
 
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
+        // BURAYA KENDİ SCRIPT URL'NİZİ YAPIŞTIRIN
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec';
 
         let basariliSayac = 0;
@@ -226,9 +235,8 @@
                 navigator.vibrate(100);
             }
             
-            gosterMesaj('⏳ Doğrulanıyor...', 'bekliyor');
+            gosterMesaj('<div class="big-icon">⏳</div><div>Doğrulanıyor...</div>', 'bekliyor');
 
-            // Direkt GET isteği ile doğrulama yap
             fetch(GOOGLE_SCRIPT_URL + '?verify=' + encodeURIComponent(qrData.trim()))
             .then(response => {
                 if (response && response.ok) {
@@ -242,29 +250,30 @@
                 if (data && data.verified) {
                     basariliSayac++;
                     
-                    // Başarılı titreşim
+                    // Başarılı titreşim - çift titreşim
                     if (navigator.vibrate) {
                         navigator.vibrate([200, 100, 200]);
                     }
                     
-                    let mesaj = '<div style="font-size: 32px; margin-bottom: 15px;">✅</div>';
-                    mesaj += '<div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">HOŞGELDİNİZ!</div>';
+                    let mesaj = '<div class="big-icon">✅</div>';
+                    mesaj += '<div class="big-text">HOŞGELDİNİZ!</div>';
                     mesaj += '<div style="font-size: 16px;">' + (data.message || 'Kayıt doğrulandı') + '</div>';
                     
                     if (data.detay) {
-                        mesaj += '<div class="detay-info">' + data.detay + '</div>';
+                        mesaj += '<div class="detay-info"><strong>Detay:</strong><br>' + data.detay + '</div>';
                     }
                     gosterMesaj(mesaj, 'basarili');
                 } else {
                     basarisizSayac++;
                     
-                    // Başarısız titreşim
+                    // Başarısız titreşim - uzun titreşim
                     if (navigator.vibrate) {
                         navigator.vibrate([500]);
                     }
                     
-                    let mesaj = '<div style="font-size: 32px; margin-bottom: 15px;">❌</div>';
-                    mesaj += '<div style="font-size: 18px;">' + (data?.message || 'Kayıt bulunamadı!') + '</div>';
+                    let mesaj = '<div class="big-icon">❌</div>';
+                    mesaj += '<div class="big-text">KAYIT BULUNAMADI</div>';
+                    mesaj += '<div style="font-size: 16px;">' + (data?.message || 'Bu QR kod sistemde kayıtlı değil!') + '</div>';
                     gosterMesaj(mesaj, 'basarisiz');
                 }
 
@@ -272,7 +281,7 @@
 
                 setTimeout(() => {
                     islemDevam = false;
-                    gosterMesaj('📸 Yeni QR kod bekliyor...', 'bekliyor');
+                    gosterMesaj('<div style="font-size: 20px;">📸 Yeni QR kod bekliyor...</div>', 'bekliyor');
                 }, 3000);
             })
             .catch(error => {
@@ -285,12 +294,14 @@
                     navigator.vibrate([500]);
                 }
                 
-                gosterMesaj('⚠️ Bağlantı hatası! Tekrar deneyin.', 'basarisiz');
+                let mesaj = '<div class="big-icon">⚠️</div>';
+                mesaj += '<div>Bağlantı hatası! Tekrar deneyin.</div>';
+                gosterMesaj(mesaj, 'basarisiz');
                 istatistikleriGuncelle();
                 
                 setTimeout(() => {
                     islemDevam = false;
-                    gosterMesaj('📸 Yeni QR kod bekliyor...', 'bekliyor');
+                    gosterMesaj('<div style="font-size: 20px;">📸 Yeni QR kod bekliyor...</div>', 'bekliyor');
                 }, 2000);
             });
         }
@@ -311,7 +322,7 @@
         }
 
         function onScanFailure(error) {
-            // Sessiz kalır, sürekli hata loglamaz
+            // Sessiz kalır
         }
 
         // QR tarayıcı başlat
@@ -330,14 +341,13 @@
 
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-        gosterMesaj('📸 Kamera hazırlanıyor...', 'bekliyor');
+        gosterMesaj('<div style="font-size: 20px;">📸 Kamera hazırlanıyor...</div>', 'bekliyor');
 
         setTimeout(() => {
             if (document.getElementById('dogrulama-sonuc').textContent.includes('hazırlanıyor')) {
-                gosterMesaj('📸 QR kodu gösterin', 'bekliyor');
+                gosterMesaj('<div style="font-size: 20px;">📸 QR kodu gösterin</div>', 'bekliyor');
             }
         }, 3000);
     </script>
 </body>
 </html>
-
