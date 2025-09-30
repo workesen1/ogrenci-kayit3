@@ -489,20 +489,18 @@
                 function veritabaninaKaydet(veri) {
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88sR995SjulMsD414XPi2LS7E6m-aJj6-2OGeizfMIIzPg7rlGOSj2Kf1HdNQpq4H/exec';
 
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(veri)
-    })
-    .then(() => {
-        console.log('Veri başarıyla gönderildi');
-    })
-    .catch(error => {
-        console.error('Bağlantı hatası:', error);
-    });
+   fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(veri)
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Veri gönderildi, cevap:', data);
+})
+.catch(error => {
+    console.error('Bağlantı hatası:', error);
+});
 }
 
 
@@ -546,6 +544,7 @@
     </script>
 </body>
 </html>
+
 
 
 
