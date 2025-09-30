@@ -396,7 +396,7 @@
                 };
             }
 
-            // QR oluştur
+            // QR oluştur önce
             const qrCodeDiv = document.getElementById('qrCode');
             qrCodeDiv.innerHTML = '';
             new QRCode(qrCodeDiv, {
@@ -409,27 +409,33 @@
             });
 
             document.getElementById('qrInfo').innerHTML = bilgi;
-            document.getElementById('kayitForm').style.display = 'none';
-            document.getElementById('qrContainer').style.display = 'block';
 
-            // Veritabanına kaydet
+            // Google Sheets'e kaydet - DÜZELTİLMİŞ
             fetch(GOOGLE_SCRIPT_URL, {
+                redirect: 'follow',
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain;charset=utf-8',
                 },
                 body: JSON.stringify(veri)
             })
-            .then(() => {
-                console.log('Kayıt gönderildi:', kayitID);
+            .then(response => response.json())
+            .then(data => {
+                console.log('Kayıt başarılı:', data);
+                // QR göster
+                document.getElementById('kayitForm').style.display = 'none';
+                document.getElementById('qrContainer').style.display = 'block';
             })
             .catch(error => {
                 console.error('Kayıt hatası:', error);
+                // Yine de QR'ı göster (offline çalışma)
+                document.getElementById('kayitForm').style.display = 'none';
+                document.getElementById('qrContainer').style.display = 'block';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Kayıt Ol';
             });
-
-            btn.disabled = false;
-            btn.textContent = 'Kayıt Ol';
         }
 
         function yeniKayit() {
@@ -453,4 +459,3 @@
     </script>
 </body>
 </html>
-
