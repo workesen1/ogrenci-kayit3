@@ -10,451 +10,435 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
-
+        
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 100%;
             max-width: 500px;
-            transition: all 0.3s ease;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
+        
         h1 {
             text-align: center;
-            color: #333;
+            color: #667eea;
             margin-bottom: 30px;
             font-size: 28px;
-            font-weight: 600;
         }
-
-        .kayit-turu {
+        
+        .tab-buttons {
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
         }
-
-        .kayit-turu button {
+        
+        .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #667eea;
             background: white;
             color: #667eea;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: bold;
+            transition: all 0.3s;
         }
-
-        .kayit-turu button.active {
+        
+        .tab-btn.active {
             background: #667eea;
             color: white;
         }
-
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
         .form-group {
             margin-bottom: 20px;
         }
-
+        
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+            color: #333;
+            font-weight: 600;
         }
-
+        
         input, select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e1e1e1;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s ease;
+            transition: border 0.3s;
         }
-
+        
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
+        
+        .ogrenci-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
         .ogrenci-item {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            justify-content: space-between;
             align-items: center;
+            padding: 8px;
+            background: #f5f5f5;
+            margin-bottom: 8px;
+            border-radius: 5px;
         }
-
-        .ogrenci-item input {
-            flex: 1;
-        }
-
-        .sil-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .ekle-btn {
-            background: #2ed573;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .kayit-btn {
+        
+        .btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
             border-radius: 10px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
+            transition: all 0.3s;
+            margin-top: 10px;
         }
-
-        .kayit-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
-
-        .qr-container {
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            width: auto;
+        }
+        
+        #qrResult {
+            display: none;
             text-align: center;
             padding: 30px;
-            display: none;
         }
-
-        .qr-code {
-            background: white;
+        
+        #qrcode {
+            margin: 20px auto;
             padding: 20px;
+            background: white;
             border-radius: 10px;
             display: inline-block;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
         }
-
+        
         .success-message {
-            color: #2ed573;
+            color: #10ac84;
             font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
-
-        .qr-info {
+        
+        .kayit-info {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
-            border-left: 4px solid #667eea;
+            margin: 15px 0;
             text-align: left;
         }
-
-        .yeni-kayit-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
+        
+        .kayit-info p {
+            margin: 8px 0;
+            color: #555;
         }
-
-        .hidden {
-            display: none;
+        
+        .kayit-info strong {
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="kayitForm">
-            <h1>🎓 Öğrenci Kayıt Sistemi</h1>
-            
-            <div class="kayit-turu">
-                <button id="bireyselBtn" class="active" onclick="kayitTuruSec('bireysel')">Bireysel Kayıt</button>
-                <button id="sinifBtn" onclick="kayitTuruSec('sinif')">Sınıf Kaydı</button>
-            </div>
-
-            <div id="bireyselForm">
-                <div class="form-group">
-                    <label for="isim">İsim:</label>
-                    <input type="text" id="isim" placeholder="Adınızı giriniz">
-                </div>
-                
-                <div class="form-group">
-                    <label for="soyisim">Soyisim:</label>
-                    <input type="text" id="soyisim" placeholder="Soyadınızı giriniz">
-                </div>
-                
-                <div class="form-group">
-                    <label for="sinif">Sınıf:</label>
-                    <select id="sinif">
-                        <option value="">Sınıf Seçiniz</option>
-                        <option value="Okul Öncesi">Okul Öncesi</option>
-                        <option value="1. Sınıf">1. Sınıf</option>
-                        <option value="2. Sınıf">2. Sınıf</option>
-                        <option value="3. Sınıf">3. Sınıf</option>
-                        <option value="4. Sınıf">4. Sınıf</option>
-                        <option value="5. Sınıf">5. Sınıf</option>
-                        <option value="6. Sınıf">6. Sınıf</option>
-                        <option value="7. Sınıf">7. Sınıf</option>
-                        <option value="8. Sınıf">8. Sınıf</option>
-                        <option value="9. Sınıf">9. Sınıf</option>
-                        <option value="10. Sınıf">10. Sınıf</option>
-                        <option value="11. Sınıf">11. Sınıf</option>
-                        <option value="12. Sınıf">12. Sınıf</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="sinifForm" class="hidden">
-                <div class="form-group">
-                    <label for="ogretmenIsim">Kayıt Eden Öğretmen:</label>
-                    <input type="text" id="ogretmenIsim" placeholder="Öğretmen adını giriniz">
-                </div>
-                
-                <div class="form-group">
-                    <label for="sinifSec">Sınıf Seç:</label>
-                    <select id="sinifSec">
-                        <option value="">Sınıf Seçiniz</option>
-                        <option value="Okul Öncesi">Okul Öncesi</option>
-                        <option value="1. Sınıf">1. Sınıf</option>
-                        <option value="2. Sınıf">2. Sınıf</option>
-                        <option value="3. Sınıf">3. Sınıf</option>
-                        <option value="4. Sınıf">4. Sınıf</option>
-                        <option value="5. Sınıf">5. Sınıf</option>
-                        <option value="6. Sınıf">6. Sınıf</option>
-                        <option value="7. Sınıf">7. Sınıf</option>
-                        <option value="8. Sınıf">8. Sınıf</option>
-                        <option value="9. Sınıf">9. Sınıf</option>
-                        <option value="10. Sınıf">10. Sınıf</option>
-                        <option value="11. Sınıf">11. Sınıf</option>
-                        <option value="12. Sınıf">12. Sınıf</option>
-                    </select>
-                </div>
-
-                <div id="ogrenciListesi">
-                    <div class="ogrenci-item">
-                        <label>1. Öğrenci:</label>
-                        <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
-                    </div>
-                </div>
-                <button type="button" class="ekle-btn" onclick="ogrenciEkle()">+ Öğrenci Ekle</button>
-            </div>
-
-            <button type="button" class="kayit-btn" id="kayitBtn" onclick="kayitOl()">Kayıt Ol</button>
+        <h1>🎓 Öğrenci Kayıt Sistemi</h1>
+        
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('bireysel')">👤 Bireysel</button>
+            <button class="tab-btn" onclick="switchTab('sinif')">👥 Sınıf</button>
         </div>
-
-        <div id="qrContainer" class="qr-container">
+        
+        <!-- Bireysel Kayıt -->
+        <div id="bireyselForm" class="form-section active">
+            <div class="form-group">
+                <label>İsim:</label>
+                <input type="text" id="isim" placeholder="Adınızı girin">
+            </div>
+            
+            <div class="form-group">
+                <label>Soyisim:</label>
+                <input type="text" id="soyisim" placeholder="Soyadınızı girin">
+            </div>
+            
+            <div class="form-group">
+                <label>Sınıf:</label>
+                <select id="sinif">
+                    <option value="">Sınıf seçin</option>
+                    <option value="1. Sınıf">1. Sınıf</option>
+                    <option value="2. Sınıf">2. Sınıf</option>
+                    <option value="3. Sınıf">3. Sınıf</option>
+                    <option value="4. Sınıf">4. Sınıf</option>
+                    <option value="5. Sınıf">5. Sınıf</option>
+                    <option value="6. Sınıf">6. Sınıf</option>
+                    <option value="7. Sınıf">7. Sınıf</option>
+                    <option value="8. Sınıf">8. Sınıf</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" onclick="kayitOl('bireysel')">
+                📝 Kayıt Ol
+            </button>
+        </div>
+        
+        <!-- Sınıf Kayıt -->
+        <div id="sinifForm" class="form-section">
+            <div class="form-group">
+                <label>Öğretmen Adı:</label>
+                <input type="text" id="ogretmen" placeholder="Öğretmen adını girin">
+            </div>
+            
+            <div class="form-group">
+                <label>Sınıf:</label>
+                <select id="sinifSec">
+                    <option value="">Sınıf seçin</option>
+                    <option value="1. Sınıf">1. Sınıf</option>
+                    <option value="2. Sınıf">2. Sınıf</option>
+                    <option value="3. Sınıf">3. Sınıf</option>
+                    <option value="4. Sınıf">4. Sınıf</option>
+                    <option value="5. Sınıf">5. Sınıf</option>
+                    <option value="6. Sınıf">6. Sınıf</option>
+                    <option value="7. Sınıf">7. Sınıf</option>
+                    <option value="8. Sınıf">8. Sınıf</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Öğrenci İsmi:</label>
+                <input type="text" id="ogrenciIsim" placeholder="Öğrenci adını girin">
+            </div>
+            
+            <button class="btn btn-secondary" onclick="ogrenciEkle()">
+                ➕ Öğrenci Ekle
+            </button>
+            
+            <div class="ogrenci-list" id="ogrenciList"></div>
+            
+            <button class="btn btn-primary" onclick="kayitOl('sinif')">
+                📝 Sınıf Kaydı Oluştur
+            </button>
+        </div>
+        
+        <!-- QR Sonuç -->
+        <div id="qrResult">
             <div class="success-message">✅ Kayıt Başarılı!</div>
-            <div class="qr-code" id="qrCode"></div>
-            <div class="qr-info" id="qrInfo"></div>
-            <button class="yeni-kayit-btn" onclick="yeniKayit()">Yeni Kayıt</button>
+            <div class="kayit-info" id="kayitBilgi"></div>
+            <div id="qrcode"></div>
+            <button class="btn btn-primary" onclick="yeniKayit()">
+                🔄 Yeni Kayıt
+            </button>
         </div>
     </div>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec';
+        const SCRIPT_URL = 'BURAYA_GOOGLE_SCRIPT_URL_YAZIN'; // Buraya kendi URL'nizi yazın
         
-        let kayitTuru = 'bireysel';
-        let ogrenciSayisi = 1;
-
-        function kayitTuruSec(tur) {
-            kayitTuru = tur;
+        let ogrenciler = [];
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
             
-            document.getElementById('bireyselBtn').classList.toggle('active', tur === 'bireysel');
-            document.getElementById('sinifBtn').classList.toggle('active', tur === 'sinif');
-            
-            document.getElementById('bireyselForm').classList.toggle('hidden', tur !== 'bireysel');
-            document.getElementById('sinifForm').classList.toggle('hidden', tur !== 'sinif');
+            if(tab === 'bireysel') {
+                document.querySelector('.tab-btn:first-child').classList.add('active');
+                document.getElementById('bireyselForm').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:last-child').classList.add('active');
+                document.getElementById('sinifForm').classList.add('active');
+            }
         }
-
+        
         function ogrenciEkle() {
-            ogrenciSayisi++;
-            const ogrenciListesi = document.getElementById('ogrenciListesi');
-            const yeniOgrenci = document.createElement('div');
-            yeniOgrenci.className = 'ogrenci-item';
-            yeniOgrenci.innerHTML = `
-                <label>${ogrenciSayisi}. Öğrenci:</label>
-                <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
-                <button type="button" class="sil-btn" onclick="ogrenciSil(this)">Sil</button>
-            `;
-            ogrenciListesi.appendChild(yeniOgrenci);
+            const isim = document.getElementById('ogrenciIsim').value.trim();
+            
+            if(!isim) {
+                alert('Lütfen öğrenci ismini girin!');
+                return;
+            }
+            
+            ogrenciler.push(isim);
+            document.getElementById('ogrenciIsim').value = '';
+            
+            updateOgrenciList();
         }
-
-        function ogrenciSil(btn) {
-            btn.parentElement.remove();
-            ogrenciNumaralariniGuncelle();
-        }
-
-        function ogrenciNumaralariniGuncelle() {
-            const ogrenciItems = document.querySelectorAll('.ogrenci-item');
-            ogrenciItems.forEach((item, index) => {
-                const label = item.querySelector('label');
-                label.textContent = `${index + 1}. Öğrenci:`;
+        
+        function updateOgrenciList() {
+            const listDiv = document.getElementById('ogrenciList');
+            listDiv.innerHTML = '';
+            
+            ogrenciler.forEach((ogrenci, index) => {
+                const item = document.createElement('div');
+                item.className = 'ogrenci-item';
+                item.innerHTML = `
+                    <span>${index + 1}. ${ogrenci}</span>
+                    <button class="btn btn-danger" onclick="ogrenciSil(${index})">🗑️</button>
+                `;
+                listDiv.appendChild(item);
             });
-            ogrenciSayisi = ogrenciItems.length;
         }
-
-        function kayitOl() {
-            const btn = document.getElementById('kayitBtn');
-            btn.disabled = true;
-            btn.textContent = 'İşleniyor...';
-
-            let bilgi = '';
-            const now = new Date();
-            const kayitID = 'KYT' + now.getTime();
-            let veri;
-
-            if (kayitTuru === 'bireysel') {
+        
+        function ogrenciSil(index) {
+            ogrenciler.splice(index, 1);
+            updateOgrenciList();
+        }
+        
+        async function kayitOl(tur) {
+            let data = {
+                tur: tur,
+                kayitID: 'KYT' + Date.now()
+            };
+            
+            if(tur === 'bireysel') {
                 const isim = document.getElementById('isim').value.trim();
                 const soyisim = document.getElementById('soyisim').value.trim();
                 const sinif = document.getElementById('sinif').value;
-
-                if (!isim || !soyisim || !sinif) {
-                    alert('Lütfen tüm alanları doldurunuz!');
-                    btn.disabled = false;
-                    btn.textContent = 'Kayıt Ol';
+                
+                if(!isim || !soyisim || !sinif) {
+                    alert('Lütfen tüm alanları doldurun!');
                     return;
                 }
-
-                bilgi = `<strong>Öğrenci:</strong> ${isim} ${soyisim}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Kayıt ID:</strong> ${kayitID}`;
-                veri = {
-                    tur: 'bireysel',
-                    isim,
-                    soyisim,
-                    sinif,
-                    tarih: now.toLocaleDateString('tr-TR'),
-                    qrData: kayitID,
-                    kayitID
-                };
-
-            } else {
-                const ogretmen = document.getElementById('ogretmenIsim').value.trim();
+                
+                data.isim = isim;
+                data.soyisim = soyisim;
+                data.sinif = sinif;
+                
+            } else if(tur === 'sinif') {
+                const ogretmen = document.getElementById('ogretmen').value.trim();
                 const sinif = document.getElementById('sinifSec').value;
-                const ogrenciInputlar = document.querySelectorAll('.ogrenci-input');
-
-                if (!ogretmen || !sinif) {
-                    alert('Lütfen öğretmen adı ve sınıf seçiniz!');
-                    btn.disabled = false;
-                    btn.textContent = 'Kayıt Ol';
+                
+                if(!ogretmen || !sinif || ogrenciler.length === 0) {
+                    alert('Lütfen tüm alanları doldurun ve en az bir öğrenci ekleyin!');
                     return;
                 }
-
-                const ogrenciler = [];
-                ogrenciInputlar.forEach(input => {
-                    if (input.value.trim()) {
-                        ogrenciler.push(input.value.trim());
-                    }
-                });
-
-                if (ogrenciler.length === 0) {
-                    alert('En az bir öğrenci ekleyiniz!');
-                    btn.disabled = false;
-                    btn.textContent = 'Kayıt Ol';
-                    return;
-                }
-
-                bilgi = `<strong>Öğretmen:</strong> ${ogretmen}<br><strong>Sınıf:</strong> ${sinif}<br><strong>Öğrenci Sayısı:</strong> ${ogrenciler.length}<br><strong>Öğrenciler:</strong> ${ogrenciler.join(', ')}<br><strong>Kayıt ID:</strong> ${kayitID}`;
-                veri = {
-                    tur: 'sinif',
-                    ogretmen,
-                    sinif,
-                    ogrenciler,
-                    tarih: now.toLocaleDateString('tr-TR'),
-                    qrData: kayitID,
-                    kayitID
-                };
+                
+                data.ogretmen = ogretmen;
+                data.sinif = sinif;
+                data.ogrenciler = ogrenciler;
             }
-
-            // QR oluştur önce
-            const qrCodeDiv = document.getElementById('qrCode');
-            qrCodeDiv.innerHTML = '';
-            new QRCode(qrCodeDiv, {
-                text: kayitID,
-                width: 256,
-                height: 256,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            document.getElementById('qrInfo').innerHTML = bilgi;
-
-            // Google Sheets'e kaydet - DÜZELTİLMİŞ
-            fetch(GOOGLE_SCRIPT_URL, {
-                redirect: 'follow',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify(veri)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Kayıt başarılı:', data);
-                // QR göster
-                document.getElementById('kayitForm').style.display = 'none';
-                document.getElementById('qrContainer').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Kayıt hatası:', error);
-                // Yine de QR'ı göster (offline çalışma)
-                document.getElementById('kayitForm').style.display = 'none';
-                document.getElementById('qrContainer').style.display = 'block';
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.textContent = 'Kayıt Ol';
-            });
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if(result.success) {
+                    showQRCode(data);
+                } else {
+                    // Hata olsa bile QR göster
+                    console.warn('Kayıt hatası:', result.message);
+                    showQRCode(data);
+                }
+                
+            } catch(error) {
+                console.error('Hata:', error);
+                // Hata olsa bile QR göster
+                showQRCode(data);
+            }
         }
-
+        
+        function showQRCode(data) {
+            // Formu gizle
+            document.querySelector('.tab-buttons').style.display = 'none';
+            document.querySelectorAll('.form-section').forEach(s => s.style.display = 'none');
+            
+            // Kayıt bilgilerini göster
+            let bilgiHTML = '';
+            
+            if(data.tur === 'bireysel') {
+                bilgiHTML = `
+                    <p><strong>İsim:</strong> ${data.isim} ${data.soyisim}</p>
+                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
+                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
+                `;
+            } else {
+                bilgiHTML = `
+                    <p><strong>Öğretmen:</strong> ${data.ogretmen}</p>
+                    <p><strong>Sınıf:</strong> ${data.sinif}</p>
+                    <p><strong>Öğrenci Sayısı:</strong> ${data.ogrenciler.length}</p>
+                    <p><strong>Kayıt ID:</strong> ${data.kayitID}</p>
+                `;
+            }
+            
+            document.getElementById('kayitBilgi').innerHTML = bilgiHTML;
+            
+            // QR kod oluştur
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: data.kayitID,
+                width: 200,
+                height: 200
+            });
+            
+            document.getElementById('qrResult').style.display = 'block';
+        }
+        
         function yeniKayit() {
-            document.querySelectorAll('input').forEach(input => input.value = '');
-            document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            // Formu temizle
+            document.getElementById('isim').value = '';
+            document.getElementById('soyisim').value = '';
+            document.getElementById('sinif').value = '';
+            document.getElementById('ogretmen').value = '';
+            document.getElementById('sinifSec').value = '';
+            document.getElementById('ogrenciIsim').value = '';
+            ogrenciler = [];
+            updateOgrenciList();
             
-            const ogrenciListesi = document.getElementById('ogrenciListesi');
-            ogrenciListesi.innerHTML = `
-                <div class="ogrenci-item">
-                    <label>1. Öğrenci:</label>
-                    <input type="text" class="ogrenci-input" placeholder="Öğrenci ismini giriniz">
-                </div>
-            `;
-            ogrenciSayisi = 1;
-            
-            kayitTuruSec('bireysel');
-            
-            document.getElementById('qrContainer').style.display = 'none';
-            document.getElementById('kayitForm').style.display = 'block';
+            // Görseli sıfırla
+            document.querySelector('.tab-buttons').style.display = 'flex';
+            document.getElementById('qrResult').style.display = 'none';
+            switchTab('bireysel');
         }
     </script>
 </body>
