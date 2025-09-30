@@ -63,11 +63,12 @@
         }
 
         .basarili {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
+            background: linear-gradient(135deg, #2ed573 0%, #26de81 100%);
+            color: white;
+            border: 2px solid #20bf6b;
             display: block;
             animation: fadeIn 0.5s;
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
         }
 
         .basarisiz {
@@ -148,7 +149,7 @@
         }
 
         .detay-info {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.2);
             padding: 10px;
             border-radius: 5px;
             margin-top: 10px;
@@ -219,26 +220,16 @@
             islemDevam = true;
 
             console.log('QR Doğrulanıyor:', qrData);
+            
+            // İlk titreşim - QR okundu
+            if (navigator.vibrate) {
+                navigator.vibrate(100);
+            }
+            
             gosterMesaj('⏳ Doğrulanıyor...', 'bekliyor');
 
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'dogrula',
-                    qrData: qrData.trim()
-                })
-            })
-            .then(() => {
-                // no-cors modunda yanıt okunamaz, alternatif kontrol
-                console.log('İstek gönderildi');
-                
-                // Geçici çözüm: GET isteği ile doğrulama
-                return fetch(GOOGLE_SCRIPT_URL + '?verify=' + encodeURIComponent(qrData.trim()));
-            })
+            // Direkt GET isteği ile doğrulama yap
+            fetch(GOOGLE_SCRIPT_URL + '?verify=' + encodeURIComponent(qrData.trim()))
             .then(response => {
                 if (response && response.ok) {
                     return response.json();
@@ -250,16 +241,31 @@
 
                 if (data && data.verified) {
                     basariliSayac++;
-                    let mesaj = '✅ ' + (data.message || 'Kayıt bulundu!');
+                    
+                    // Başarılı titreşim
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    
+                    let mesaj = '<div style="font-size: 32px; margin-bottom: 15px;">✅</div>';
+                    mesaj += '<div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">HOŞGELDİNİZ!</div>';
+                    mesaj += '<div style="font-size: 16px;">' + (data.message || 'Kayıt doğrulandı') + '</div>';
+                    
                     if (data.detay) {
                         mesaj += '<div class="detay-info">' + data.detay + '</div>';
                     }
                     gosterMesaj(mesaj, 'basarili');
-                    navigator.vibrate && navigator.vibrate([200, 100, 200]);
                 } else {
                     basarisizSayac++;
-                    gosterMesaj('❌ ' + (data?.message || 'Kayıt bulunamadı!'), 'basarisiz');
-                    navigator.vibrate && navigator.vibrate([500]);
+                    
+                    // Başarısız titreşim
+                    if (navigator.vibrate) {
+                        navigator.vibrate([500]);
+                    }
+                    
+                    let mesaj = '<div style="font-size: 32px; margin-bottom: 15px;">❌</div>';
+                    mesaj += '<div style="font-size: 18px;">' + (data?.message || 'Kayıt bulunamadı!') + '</div>';
+                    gosterMesaj(mesaj, 'basarisiz');
                 }
 
                 istatistikleriGuncelle();
@@ -273,6 +279,12 @@
                 console.error('Doğrulama hatası:', error);
                 basarisizSayac++;
                 toplamSayac++;
+                
+                // Hata titreşimi
+                if (navigator.vibrate) {
+                    navigator.vibrate([500]);
+                }
+                
                 gosterMesaj('⚠️ Bağlantı hatası! Tekrar deneyin.', 'basarisiz');
                 istatistikleriGuncelle();
                 
