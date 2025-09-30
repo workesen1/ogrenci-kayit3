@@ -10,345 +10,359 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a1a2e;
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
         }
-
-        .container {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .info {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-size: 14px;
-            color: #333;
-        }
-
+        
         #reader {
             width: 100%;
-            border: 3px solid #667eea;
-            border-radius: 10px;
-            overflow: hidden;
+            height: 100vh;
+            position: relative;
         }
-
-        #dogrulama-sonuc {
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 8px;
-            font-size: 16px;
+        
+        #result {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .result-content {
+            width: 90%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .error {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 0.6s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .result-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .result-message {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+        
+        .result-details {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .close-btn {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .stats {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+        
+        .stats-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
             text-align: center;
         }
-
-        .basarili {
-            background: linear-gradient(135deg, #2ed573 0%, #26de81 100%);
-            color: white;
-            border: 2px solid #20bf6b;
-            display: block;
-            animation: fadeIn 0.5s;
-            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
-
-        .basarisiz {
-            background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
-            color: white;
-            border: 2px solid #ff3838;
-            display: block;
-            animation: shake 0.5s;
-            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
-        }
-
-        .bekliyor {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 2px solid #bee5eb;
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
+        
         .stat-item {
             text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .btn {
-            width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
             border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            color: white;
         }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-        }
-
-        .detay-info {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 12px;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-size: 14px;
-            text-align: left;
-            line-height: 1.6;
-        }
-
-        .big-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .big-text {
-            font-size: 28px;
+        
+        .stat-value {
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        #qr-shaded-region {
+            border: 3px solid #667eea !important;
+            box-shadow: 0 0 0 100vmax rgba(0,0,0,0.5) !important;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📱 QR Kod Doğrulama</h1>
-
-        <div class="info">
-            <strong>📸 Nasıl Kullanılır?</strong><br>
-            • QR kodu kamera karşısına tutun<br>
-            • Çerçeve içinde ortalayın<br>
-            • 15-20 cm uzaklıkta tutun<br>
-            • Otomatik okuyacak
-        </div>
-
-        <div id="reader"></div>
-
-        <div id="dogrulama-sonuc"></div>
-
-        <div class="stats">
+    <div class="stats">
+        <div class="stats-title">📊 Doğrulama İstatistikleri</div>
+        <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-number" id="basarili-sayac">0</div>
+                <div class="stat-value" id="totalScans">0</div>
+                <div class="stat-label">Toplam Tarama</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="successScans">0</div>
                 <div class="stat-label">Başarılı</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number" id="basarisiz-sayac" style="color: #ff4757;">0</div>
-                <div class="stat-label">Başarısız</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="toplam-sayac" style="color: #2ed573;">0</div>
-                <div class="stat-label">Toplam</div>
-            </div>
         </div>
-
-        <button class="btn btn-secondary" onclick="location.reload()">🔄 Yeniden Başlat</button>
     </div>
-
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    
+    <div id="reader"></div>
+    
+    <div id="result">
+        <div class="result-content" id="resultContent">
+            <div class="result-icon" id="resultIcon"></div>
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="result-details" id="resultDetails"></div>
+            <button class="close-btn" onclick="closeResult()">Devam Et</button>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
-        // BURAYA KENDİ SCRIPT URL'NİZİ YAPIŞTIRIN
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAegdaMJNXOVJ6YaeE5Ps-cKfpdBJp2_2k_uR6k4DJVgQ1194kjxpadyfuh0fUgO0u/exec';
-
-        let basariliSayac = 0;
-        let basarisizSayac = 0;
-        let toplamSayac = 0;
-        let sonOkunanQR = '';
-        let sonOkumaZamani = 0;
-        let islemDevam = false;
-
-        function gosterMesaj(mesaj, tip) {
-            const sonucDiv = document.getElementById('dogrulama-sonuc');
-            sonucDiv.className = tip;
-            sonucDiv.innerHTML = mesaj;
-        }
-
-        function istatistikleriGuncelle() {
-            document.getElementById('basarili-sayac').textContent = basariliSayac;
-            document.getElementById('basarisiz-sayac').textContent = basarisizSayac;
-            document.getElementById('toplam-sayac').textContent = toplamSayac;
-        }
-
-        function qrKoduDogrula(qrData) {
-            if (islemDevam) return;
-            islemDevam = true;
-
-            console.log('QR Doğrulanıyor:', qrData);
-            
-            // İlk titreşim - QR okundu
-            if (navigator.vibrate) {
-                navigator.vibrate(100);
+        const SCRIPT_URL = 'BURAYA_GOOGLE_SCRIPT_URL_YAZIN'; // Buraya kendi URL'nizi yazın
+        
+        let html5QrCode;
+        let totalScans = 0;
+        let successScans = 0;
+        let isProcessing = false;
+        
+        // Titreşim fonksiyonu
+        function vibrate(pattern) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
             }
+        }
+        
+        // QR okuyucuyu başlat
+        function startScanner() {
+            html5QrCode = new Html5Qrcode("reader");
             
-            gosterMesaj('<div class="big-icon">⏳</div><div>Doğrulanıyor...</div>', 'bekliyor');
-
-            fetch(GOOGLE_SCRIPT_URL + '?verify=' + encodeURIComponent(qrData.trim()))
-            .then(response => {
-                if (response && response.ok) {
-                    return response.json();
-                }
-                throw new Error('Yanıt alınamadı');
-            })
-            .then(data => {
-                toplamSayac++;
-
-                if (data && data.verified) {
-                    basariliSayac++;
-                    
-                    // Başarılı titreşim - çift titreşim
-                    if (navigator.vibrate) {
-                        navigator.vibrate([200, 100, 200]);
-                    }
-                    
-                    let mesaj = '<div class="big-icon">✅</div>';
-                    mesaj += '<div class="big-text">HOŞGELDİNİZ!</div>';
-                    mesaj += '<div style="font-size: 16px;">' + (data.message || 'Kayıt doğrulandı') + '</div>';
-                    
-                    if (data.detay) {
-                        mesaj += '<div class="detay-info"><strong>Detay:</strong><br>' + data.detay + '</div>';
-                    }
-                    gosterMesaj(mesaj, 'basarili');
-                } else {
-                    basarisizSayac++;
-                    
-                    // Başarısız titreşim - uzun titreşim
-                    if (navigator.vibrate) {
-                        navigator.vibrate([500]);
-                    }
-                    
-                    let mesaj = '<div class="big-icon">❌</div>';
-                    mesaj += '<div class="big-text">KAYIT BULUNAMADI</div>';
-                    mesaj += '<div style="font-size: 16px;">' + (data?.message || 'Bu QR kod sistemde kayıtlı değil!') + '</div>';
-                    gosterMesaj(mesaj, 'basarisiz');
-                }
-
-                istatistikleriGuncelle();
-
-                setTimeout(() => {
-                    islemDevam = false;
-                    gosterMesaj('<div style="font-size: 20px;">📸 Yeni QR kod bekliyor...</div>', 'bekliyor');
-                }, 3000);
-            })
-            .catch(error => {
-                console.error('Doğrulama hatası:', error);
-                basarisizSayac++;
-                toplamSayac++;
-                
-                // Hata titreşimi
-                if (navigator.vibrate) {
-                    navigator.vibrate([500]);
-                }
-                
-                let mesaj = '<div class="big-icon">⚠️</div>';
-                mesaj += '<div>Bağlantı hatası! Tekrar deneyin.</div>';
-                gosterMesaj(mesaj, 'basarisiz');
-                istatistikleriGuncelle();
-                
-                setTimeout(() => {
-                    islemDevam = false;
-                    gosterMesaj('<div style="font-size: 20px;">📸 Yeni QR kod bekliyor...</div>', 'bekliyor');
-                }, 2000);
-            });
-        }
-
-        function onScanSuccess(decodedText, decodedResult) {
-            const simdikiZaman = Date.now();
-
-            // Aynı QR kodu 3 saniye içinde tekrar okumayı engelle
-            if (decodedText === sonOkunanQR && (simdikiZaman - sonOkumaZamani) < 3000) {
-                return;
-            }
-
-            sonOkunanQR = decodedText;
-            sonOkumaZamani = simdikiZaman;
-
-            console.log('QR Kod okundu:', decodedText);
-            qrKoduDogrula(decodedText);
-        }
-
-        function onScanFailure(error) {
-            // Sessiz kalır
-        }
-
-        // QR tarayıcı başlat
-        const html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            { 
+            const config = {
                 fps: 10,
                 qrbox: { width: 250, height: 250 },
-                aspectRatio: 1.0,
-                rememberLastUsedCamera: true,
-                showTorchButtonIfSupported: true,
-                formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
-            },
-            false
-        );
-
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
-        gosterMesaj('<div style="font-size: 20px;">📸 Kamera hazırlanıyor...</div>', 'bekliyor');
-
-        setTimeout(() => {
-            if (document.getElementById('dogrulama-sonuc').textContent.includes('hazırlanıyor')) {
-                gosterMesaj('<div style="font-size: 20px;">📸 QR kodu gösterin</div>', 'bekliyor');
+                aspectRatio: 1.0
+            };
+            
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error("Kamera başlatma hatası:", err);
+                alert("Kamera erişimi için izin gerekli!");
+            });
+        }
+        
+        async function onScanSuccess(decodedText, decodedResult) {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            // QR okundu titreşimi
+            vibrate(100);
+            
+            // Tarama durdur
+            html5QrCode.pause(true);
+            
+            // İstatistikleri güncelle
+            totalScans++;
+            document.getElementById('totalScans').textContent = totalScans;
+            
+            try {
+                // Google Sheets'ten doğrula
+                const response = await fetch(`${SCRIPT_URL}?verify=${encodeURIComponent(decodedText)}`);
+                const result = await response.json();
+                
+                if (result.verified) {
+                    // Başarılı
+                    successScans++;
+                    document.getElementById('successScans').textContent = successScans;
+                    
+                    // Çift titreşim - başarılı
+                    vibrate([200, 100, 200]);
+                    
+                    const content = document.getElementById('resultContent');
+                    content.className = 'result-content';
+                    
+                    if(result.alreadyVerified) {
+                        // Daha önce onaylanmış
+                        content.classList.add('warning');
+                        document.getElementById('resultIcon').textContent = '⚠️';
+                        document.getElementById('resultTitle').textContent = 'DAHA ÖNCE ONAYLANDI';
+                        document.getElementById('resultMessage').textContent = result.message;
+                    } else {
+                        // İlk kez onaylandı
+                        content.classList.add('success');
+                        document.getElementById('resultIcon').textContent = '✅';
+                        document.getElementById('resultTitle').textContent = 'HOŞGELDİNİZ!';
+                        document.getElementById('resultMessage').textContent = result.message;
+                    }
+                    
+                    document.getElementById('resultDetails').innerHTML = `
+                        <strong>📝 Kayıt Bilgisi:</strong><br>
+                        ${result.detay}
+                    `;
+                    
+                } else {
+                    // Başarısız
+                    // Uzun titreşim - hata
+                    vibrate(500);
+                    
+                    const content = document.getElementById('resultContent');
+                    content.className = 'result-content error';
+                    document.getElementById('resultIcon').textContent = '❌';
+                    document.getElementById('resultTitle').textContent = 'KAYIT BULUNAMADI';
+                    document.getElementById('resultMessage').textContent = result.message;
+                    document.getElementById('resultDetails').innerHTML = `
+                        <strong>QR Kod:</strong> ${decodedText}
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Doğrulama hatası:', error);
+                
+                // Hata titreşimi
+                vibrate(500);
+                
+                const content = document.getElementById('resultContent');
+                content.className = 'result-content error';
+                document.getElementById('resultIcon').textContent = '⚠️';
+                document.getElementById('resultTitle').textContent = 'BAĞLANTI HATASI';
+                document.getElementById('resultMessage').textContent = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                document.getElementById('resultDetails').innerHTML = `
+                    <strong>Hata:</strong> ${error.message}
+                `;
             }
-        }, 3000);
+            
+            // Sonucu göster
+            document.getElementById('result').style.display = 'flex';
+            
+            // 3 saniye sonra otomatik kapat (sadece başarılı durumda)
+            setTimeout(() => {
+                if(document.getElementById('result').style.display === 'flex') {
+                    // Başarılı ise otomatik kapat
+                    const content = document.getElementById('resultContent');
+                    if(content.classList.contains('success') || content.classList.contains('warning')) {
+                        closeResult();
+                    }
+                }
+            }, 3000);
+        }
+        
+        function onScanError(errorMessage) {
+            // QR kod bulunamadığında - sessizce devam et
+        }
+        
+        function closeResult() {
+            document.getElementById('result').style.display = 'none';
+            isProcessing = false;
+            
+            // Taramayı yeniden başlat
+            html5QrCode.resume();
+        }
+        
+        // Sayfa yüklendiğinde başlat
+        window.addEventListener('load', () => {
+            startScanner();
+        });
+        
+        // Sayfa kapanmadan önce kamerayı durdur
+        window.addEventListener('beforeunload', () => {
+            if (html5QrCode) {
+                html5QrCode.stop();
+            }
+        });
     </script>
 </body>
 </html>
-
